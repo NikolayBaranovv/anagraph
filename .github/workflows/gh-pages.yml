@@ -31,8 +31,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build dist/ directory
-        env:
-          PUBLIC_URL: ${{ steps.deployment.outputs.page_url }}
         run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
