@@ -17,7 +17,6 @@ function iterateTouchList(
 
 export type Bounds = Readonly<[number, number]>;
 
-const mousePointerId = "mouse";
 const wheelZoomFactor = 1.5;
 
 /** @function useDragAndZoom
@@ -128,6 +127,15 @@ export function useDragAndZoom(
             });
         };
 
+        const onPointerDown = (event: PointerEvent) => {
+            if (event.pointerType != "mouse") return;
+            temporaryViewport = viewport;
+            const bounds = element.getBoundingClientRect();
+            const x = calcXInTemporaryViewport(event.pageX, bounds);
+            touchInfo[event.pointerId] = { originX: x, currentX: x };
+            element.setPointerCapture(event.pointerId);
+        };
+
         const onTouchEnd = (event: TouchEvent) => {
             iterateTouchList(
                 event.changedTouches,
@@ -135,6 +143,15 @@ export function useDragAndZoom(
             );
 
             if (Object.keys(touchInfo).length == 0) onEnd(temporaryViewport);
+        };
+
+        const onPointerUp = (event: PointerEvent) => {
+            if (event.pointerType != "mouse") return;
+            delete touchInfo[event.pointerId];
+            if (Object.keys(touchInfo).length == 0) {
+                onEnd(temporaryViewport);
+            }
+            element.releasePointerCapture(event.pointerId);
         };
 
         const onTouchMove = (event: TouchEvent) => {
@@ -151,28 +168,10 @@ export function useDragAndZoom(
             updateTemporaryViewport();
         };
 
-        const onMouseDown = (event: MouseEvent) => {
-            event.preventDefault();
-            temporaryViewport = viewport;
-
+        const onPointerMove = (event: PointerEvent) => {
+            if (event.pointerType != "mouse") return;
             const bounds = element.getBoundingClientRect();
-            touchInfo[mousePointerId] = {
-                originX: calcXInTemporaryViewport(event.pageX, bounds),
-                currentX: calcXInTemporaryViewport(event.pageX, bounds),
-            };
-        };
-
-        const onMouseUp = () => {
-            delete touchInfo[mousePointerId];
-
-            if (Object.keys(touchInfo).length == 0) onEnd(temporaryViewport);
-        };
-
-        const onMouseMove = (event: MouseEvent) => {
-            if (!(mousePointerId in touchInfo)) return;
-
-            const bounds = element.getBoundingClientRect();
-            const info = touchInfo[mousePointerId];
+            const info = touchInfo[event.pointerId];
             if (info) {
                 info.currentX = calcXInTemporaryViewport(event.pageX, bounds);
                 updateTemporaryViewport();
@@ -199,19 +198,21 @@ export function useDragAndZoom(
         element.addEventListener("touchstart", onTouchStart);
         element.addEventListener("touchmove", onTouchMove);
         element.addEventListener("touchend", onTouchEnd);
-        element.addEventListener("mousedown", onMouseDown);
-        element.addEventListener("mousemove", onMouseMove);
-        element.addEventListener("mouseup", onMouseUp);
         element.addEventListener("wheel", onWheel);
+
+        element.addEventListener("pointerdown", onPointerDown);
+        element.addEventListener("pointerup", onPointerUp);
+        element.addEventListener("pointermove", onPointerMove);
 
         return () => {
             element.removeEventListener("touchstart", onTouchStart);
             element.removeEventListener("touchmove", onTouchMove);
             element.removeEventListener("touchend", onTouchEnd);
-            element.removeEventListener("mousedown", onMouseDown);
-            element.removeEventListener("mousemove", onMouseMove);
-            element.removeEventListener("mouseup", onMouseUp);
             element.removeEventListener("wheel", onWheel);
+
+            element.removeEventListener("pointerdown", onPointerDown);
+            element.removeEventListener("pointerup", onPointerUp);
+            element.removeEventListener("pointermove", onPointerMove);
         };
     }, [element, onChange, onEnd, viewport]);
 }
