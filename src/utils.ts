@@ -27,3 +27,15 @@ export function generateRandomData(
     }
     return data;
 }
+
+export interface Size {
+    width: number;
+    height: number;
+}
+
+export interface Offset {
+    x: number;
+    y: number;
+}
+
+export type Rect = Offset & Size;

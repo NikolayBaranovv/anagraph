@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { BoundsContext } from "./bounds";
+import { BoundsContext } from "./BoundsManager";
 import { useDragAndZoom } from "./useDragAndZoom";
 
 export function Manipulator() {

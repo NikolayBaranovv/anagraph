@@ -1,0 +1,2 @@
+- [ ] Fix touchpad zooming performance by debouncing "manipulation end" event
+- [ ] Think about better "drawers" registration

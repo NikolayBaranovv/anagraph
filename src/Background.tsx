@@ -1,11 +1,14 @@
 import { useCallback, useContext, useEffect } from "react";
-import { BoundsContext } from "./bounds";
+import { BoundsContext } from "./BoundsManager";
 import { CanvasContext } from "./Canvas";
 
 export function Background() {
     const boundsContext = useContext(BoundsContext);
 
-    const { ctx, width, height } = useContext(CanvasContext);
+    const {
+        ctx,
+        size: { width, height },
+    } = useContext(CanvasContext);
 
     const drawer = useCallback(() => {
         if (!ctx) return;
@@ -14,6 +17,8 @@ export function Background() {
     }, [ctx, width, height]);
 
     useEffect(() => {
+        // FIXME: why bounds!? These drawers should probably register themselves in
+        //        Canvas context, not bounds context...
         boundsContext.addXBoundsCallback(drawer);
         return () => boundsContext.removeXBoundsCallback(drawer);
     }, [boundsContext, drawer]);

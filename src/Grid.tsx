@@ -1,18 +1,15 @@
 import { useCallback, useContext, useEffect } from "react";
-import { BoundsContext } from "./bounds";
+import { BoundsContext } from "./BoundsManager";
 import { CanvasContext } from "./Canvas";
 import { Bounds } from "./useDragAndZoom";
 import { scale } from "./utils";
+import { useGridRect } from "./LayoutManager";
 
 const log10_5 = Math.log10(5);
 const log10_4 = Math.log10(4);
 const log10_2 = Math.log10(2);
 
-function* generateTicks(
-    range: Bounds,
-    pixels: number,
-    minPixels: number
-): Generator<number> {
+function* generateTicks(range: Bounds, pixels: number, minPixels: number): Generator<number> {
     const xRange = range[1] - range[0];
 
     const targetXStepLog = Math.log10((xRange / pixels) * minPixels);
@@ -32,7 +29,9 @@ function* generateTicks(
 
 export function Grid() {
     const boundsContext = useContext(BoundsContext);
-    const { ctx, width, height } = useContext(CanvasContext);
+    const { ctx } = useContext(CanvasContext);
+
+    const gridRect = useGridRect();
 
     const drawer = useCallback(
         (xBounds: Bounds) => {
@@ -41,25 +40,23 @@ export function Grid() {
             ctx.strokeStyle = "#ccc";
             ctx.lineWidth = 1;
 
-            for (const y of generateTicks(boundsContext.yBounds, height, 50)) {
-                const ypx =
-                    Math.round(scale(y, boundsContext.yBounds, [0, height])) +
-                    0.5;
+            for (const y of generateTicks(boundsContext.yBounds, gridRect.height, 50)) {
+                const ypx = Math.round(scale(y, boundsContext.yBounds, [gridRect.y, gridRect.height])) + 0.5;
                 ctx.beginPath();
-                ctx.moveTo(0, ypx);
-                ctx.lineTo(width, ypx);
+                ctx.moveTo(gridRect.x, ypx);
+                ctx.lineTo(gridRect.x + gridRect.width, ypx);
                 ctx.stroke();
             }
 
-            for (const x of generateTicks(xBounds, width, 50)) {
-                const xpx = Math.round(scale(x, xBounds, [0, width])) + 0.5;
+            for (const x of generateTicks(xBounds, gridRect.width, 50)) {
+                const xpx = Math.round(scale(x, xBounds, [gridRect.x, gridRect.width])) + 0.5;
                 ctx.beginPath();
-                ctx.moveTo(xpx, 0);
-                ctx.lineTo(xpx, height);
+                ctx.moveTo(xpx, gridRect.y);
+                ctx.lineTo(xpx, gridRect.y + gridRect.height);
                 ctx.stroke();
             }
         },
-        [ctx, width, height, boundsContext.yBounds]
+        [ctx, gridRect, boundsContext.yBounds]
     );
 
     useEffect(() => {

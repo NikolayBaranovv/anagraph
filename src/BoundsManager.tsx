@@ -1,5 +1,6 @@
 import React, {
     createContext,
+    ReactElement,
     ReactNode,
     useCallback,
     useMemo,
@@ -42,7 +43,7 @@ interface BoundsManagerProps {
     children: ReactNode | ReactNode[];
 }
 
-export function BoundsManager(props: BoundsManagerProps) {
+export function BoundsManager(props: BoundsManagerProps): ReactElement {
     const handlers = useRef<BoundsHandler[]>([]);
 
     const redrawPlanned = useRef(false);
