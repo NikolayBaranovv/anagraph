@@ -7,11 +7,7 @@ interface BinarySearchResult {
     r: number;
 }
 
-export function binarySearchByField<T, K extends keyof T>(
-    data: T[],
-    field: K,
-    value: T[K]
-): BinarySearchResult {
+export function binarySearchByField<T, K extends keyof T>(data: T[], field: K, value: T[K]): BinarySearchResult {
     let r: number = data.length;
     let l = -1;
     let m: number;
@@ -24,20 +20,15 @@ export function binarySearchByField<T, K extends keyof T>(
     return { l, r };
 }
 
-export function binarySearchByIndex0<T extends ArrayWithFirstTyped<V>, V>(
-    data: T[],
-    value: V
-): BinarySearchResult {
+export function binarySearchByIndex0<T extends ArrayWithFirstTyped<V>, V>(data: T[], value: V): BinarySearchResult {
     return binarySearchByField(data, 0, value);
 }
 
 type DataPoint = [number, number | null];
 
-export function visualDownsample(
-    data: DataPoint[],
-    [min_x, max_x]: Bounds,
-    pnt_count: number
-): DataPoint[] {
+export function visualDownsample(data: DataPoint[], [min_x, max_x]: Bounds, pnt_count: number): DataPoint[] {
+    if (pnt_count <= 0) return [];
+
     const left = binarySearchByIndex0(data, min_x).r;
     const right = binarySearchByIndex0(data, max_x).r;
 
@@ -63,21 +54,12 @@ export function visualDownsample(
         let last: DataPoint | null = null;
         let first_null = false;
         let last_null = false;
+
         while (data[i] != null && i < data_length && data[i][0] < bucket_r) {
             const item = data[i];
 
-            if (
-                max == null ||
-                max[1] == null ||
-                (item[1] != null && item[1] > max[1])
-            )
-                max = item;
-            if (
-                min == null ||
-                min[1] == null ||
-                (item[1] != null && item[1] < min[1])
-            )
-                min = item;
+            if (max == null || max[1] == null || (item[1] != null && item[1] > max[1])) max = item;
+            if (min == null || min[1] == null || (item[1] != null && item[1] < min[1])) min = item;
             if (first == null) {
                 if (item[1] == null) first_null = true;
                 first = item;

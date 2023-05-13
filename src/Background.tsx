@@ -7,7 +7,7 @@ export function Background() {
 
     const {
         ctx,
-        size: { width, height },
+        canvasSizeCpx: { width, height },
     } = useContext(CanvasContext);
 
     const drawer = useCallback(() => {

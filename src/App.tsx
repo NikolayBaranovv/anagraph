@@ -10,9 +10,12 @@ import { Grid } from "./Grid";
 import { Manipulator } from "./Manipulator";
 import { Line } from "./Line";
 import { LayoutManager } from "./LayoutManager";
-import { Legends } from "./Legends";
+import { TimeXLegend } from "./TimeXLegend";
+import { YLegend } from "./YLegend";
 
-const xBounds: Bounds = [0, 1000];
+const todayStart = new Date();
+todayStart.setHours(0, 0, 0, 0);
+const xBounds: Bounds = [todayStart.getTime(), todayStart.getTime() + 31 * 24 * 60 * 60 * 1e3];
 const yBounds: Bounds = [-100, 100];
 const n = 60 * 24 * 31;
 const nGraphs = 3;
@@ -32,7 +35,8 @@ function App() {
                         {graphData.map((graphData, i) => (
                             <Line data={graphData} key={i} />
                         ))}
-                        <Legends />
+                        <TimeXLegend />
+                        <YLegend />
                     </Canvas>
                     <Canvas className="graph">
                         <Manipulator />
@@ -41,7 +45,8 @@ function App() {
                         {graphData.map((graphData, i) => (
                             <Line data={graphData} key={i} />
                         ))}
-                        <Legends />
+                        <TimeXLegend />
+                        <YLegend />
                     </Canvas>
                 </BoundsManager>
             </LayoutManager>

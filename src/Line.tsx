@@ -5,7 +5,7 @@ import { FPSContext } from "./fps";
 import { CanvasContext } from "./Canvas";
 import { Bounds } from "./useDragAndZoom";
 import { visualDownsample } from "./downsample";
-import { useGridRect } from "./LayoutManager";
+import { useGridRectCpx } from "./LayoutManager";
 
 interface LineProps {
     data: GraphData;
@@ -18,7 +18,7 @@ export function Line(props: LineProps) {
 
     const { ctx } = useContext(CanvasContext);
 
-    const gridRect = useGridRect();
+    const gridRect = useGridRectCpx();
 
     const grad = useMemo(() => {
         if (ctx == null) {
@@ -56,7 +56,7 @@ export function Line(props: LineProps) {
 
                 const scaled = downsampled.map(([x, y]): [number, number | null] => [
                     scale(x, effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]),
-                    y == null ? null : scale(y, [ymin, ymax], [gridRect.y, gridRect.y + gridRect.height]),
+                    y == null ? null : scale(y, [ymin, ymax], [gridRect.y + gridRect.height, gridRect.y]),
                 ]);
 
                 for (let i = 0; i < scaled.length - 1; i++) {

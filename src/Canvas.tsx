@@ -3,12 +3,12 @@ import { Size } from "./utils";
 
 interface CanvasContextType {
     ctx: CanvasRenderingContext2D | null;
-    size: Size;
+    canvasSizeCpx: Size;
 }
 
 export const CanvasContext = createContext<CanvasContextType>({
     ctx: null,
-    size: { width: 100, height: 100 },
+    canvasSizeCpx: { width: 100, height: 100 },
 });
 
 interface CanvasProps {
@@ -19,16 +19,16 @@ interface CanvasProps {
 export function Canvas(props: CanvasProps): ReactElement {
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
-    const [size, setSize] = useState<Size>({ width: 100, height: 100 });
+    const [canvasSizeCpx, setCanvasSizeCpx] = useState<Size>({ width: 100, height: 100 });
 
     const onCanvasResize = useCallback(
         (entries: ResizeObserverEntry[]) => {
             if (canvas == null) return;
             canvas.width = entries[0].devicePixelContentBoxSize[0].inlineSize;
             canvas.height = entries[0].devicePixelContentBoxSize[0].blockSize;
-            setSize({ width: canvas.width, height: canvas.height });
+            setCanvasSizeCpx({ width: canvas.width, height: canvas.height });
         },
-        [canvas, setSize]
+        [canvas, setCanvasSizeCpx]
     );
 
     const sizeObserver = useMemo(() => new ResizeObserver(onCanvasResize), [onCanvasResize]);
@@ -41,7 +41,7 @@ export function Canvas(props: CanvasProps): ReactElement {
 
     const ctx: CanvasRenderingContext2D | null = useMemo(() => canvas?.getContext("2d") ?? null, [canvas]);
 
-    const context: CanvasContextType = useMemo(() => ({ ctx, size }), [ctx, size]);
+    const context: CanvasContextType = useMemo(() => ({ ctx, canvasSizeCpx }), [ctx, canvasSizeCpx]);
 
     return (
         <div className={props.className} style={{ position: "relative" }}>
