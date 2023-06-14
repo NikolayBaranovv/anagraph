@@ -1,17 +1,19 @@
 import React from "react";
-import "./App.css";
 import { Bounds } from "./lib/useDragAndZoom";
-import { FPSIndicator, FPSManager } from "./lib/fps";
-import { BoundsManager } from "./lib/BoundsManager";
-import { Canvas } from "./lib/Canvas";
-import { Background } from "./lib/Background";
+import {
+    Background,
+    BoundsManager,
+    Canvas,
+    FPSIndicator,
+    FPSManager,
+    Grid,
+    LayoutManager,
+    Line,
+    Manipulator,
+    TimeXLegend,
+    YLegend,
+} from "./lib";
 import { generateRandomData } from "./lib/utils";
-import { Grid } from "./lib/Grid";
-import { Manipulator } from "./lib/Manipulator";
-import { Line } from "./lib/Line";
-import { LayoutManager } from "./lib/LayoutManager";
-import { TimeXLegend } from "./lib/TimeXLegend";
-import { YLegend } from "./lib/YLegend";
 
 const todayStart = new Date();
 todayStart.setHours(0, 0, 0, 0);
@@ -28,7 +30,7 @@ function App() {
             <LayoutManager>
                 <BoundsManager initialXBounds={xBounds} yBounds={yBounds}>
                     <FPSIndicator />
-                    <Canvas className="graph">
+                    <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
                         <Manipulator />
                         <Background />
                         <Grid />
@@ -38,7 +40,7 @@ function App() {
                         <TimeXLegend />
                         <YLegend />
                     </Canvas>
-                    <Canvas className="graph">
+                    <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
                         <Manipulator />
                         <Background />
                         <Grid />

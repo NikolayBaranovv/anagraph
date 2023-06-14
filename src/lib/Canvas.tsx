@@ -1,4 +1,13 @@
-import React, { createContext, ReactElement, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+    createContext,
+    CSSProperties,
+    ReactElement,
+    ReactNode,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { Size } from "./utils";
 
 interface CanvasContextType {
@@ -12,6 +21,7 @@ export const CanvasContext = createContext<CanvasContextType>({
 });
 
 interface CanvasProps {
+    style?: CSSProperties;
     className?: string;
     children: React.ReactNode | ReactNode[];
 }
@@ -44,7 +54,7 @@ export function Canvas(props: CanvasProps): ReactElement {
     const context: CanvasContextType = useMemo(() => ({ ctx, canvasSizeCpx }), [ctx, canvasSizeCpx]);
 
     return (
-        <div className={props.className} style={{ position: "relative" }}>
+        <div className={props.className} style={{ position: "relative", height: "350px", ...props.style }}>
             <CanvasContext.Provider value={context}>
                 <canvas ref={setCanvas} style={{ width: "100%", height: "100%" }}></canvas>
                 {props.children}
