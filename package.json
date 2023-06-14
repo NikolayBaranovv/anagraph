@@ -17,6 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "rollup -c --bundleConfigAsCjs",
+    "build-example": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -49,7 +50,6 @@
     "@types/node": "^16.11.57",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
-    "babel-cli": "^6.26.0",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
