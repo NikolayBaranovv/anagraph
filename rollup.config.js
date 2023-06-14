@@ -27,7 +27,7 @@ export default [
     },
     {
         input: "src/lib/index.ts",
-        output: [{ file: "dist/types.d.ts", format: "es" }],
+        output: [{ file: "dist/anagraph.d.ts", format: "es" }],
         plugins: [dts.default()],
     },
 ];

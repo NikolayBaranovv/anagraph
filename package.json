@@ -1,10 +1,10 @@
 {
   "name": "anagraph",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "homepage": "https://ilyaskriblovsky.github.io/anagraph",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/anagraph.js",
+  "module": "dist/anagraph.esm.js",
+  "types": "dist/anagraph.d.ts",
   "files": [
     "dist",
     "README.md"
