@@ -3,7 +3,8 @@ import { useCallback, useContext, useEffect } from "react";
 import { useGridRectCpx, useLabelSettings } from "./LayoutManager";
 import { Bounds } from "./useDragAndZoom";
 import { generateTicks, scale } from "./utils";
-import { BoundsContext } from "./BoundsManager";
+import { useBoundsContext } from "./BoundsManager";
+import { useYAxisContext } from "./YAxisProvider";
 
 function label(y: number): string {
     return y.toFixed(1);
@@ -12,7 +13,7 @@ function label(y: number): string {
 export function YLegend(): null {
     const { ctx } = useContext(CanvasContext);
 
-    const { yBounds } = useContext(BoundsContext);
+    const { bounds: yBounds } = useYAxisContext();
     const gridLayout = useGridRectCpx();
     const labelSettings = useLabelSettings();
 
@@ -45,7 +46,7 @@ export function YLegend(): null {
         [ctx, gridLayout, labelSettings]
     );
 
-    const boundsContext = useContext(BoundsContext);
+    const boundsContext = useBoundsContext();
     useEffect(() => {
         boundsContext.addXBoundsCallback(drawer);
         return () => boundsContext.removeXBoundsCallback(drawer);

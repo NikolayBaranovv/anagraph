@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect } from "react";
 import { useGridRectCpx, useLabelSettings } from "./LayoutManager";
 import { CanvasContext } from "./Canvas";
-import { BoundsContext } from "./BoundsManager";
+import { useBoundsContext } from "./BoundsManager";
 import { generateTimeTicks, scale } from "./utils";
 import { Bounds } from "./useDragAndZoom";
 
@@ -73,7 +73,7 @@ export function TimeXLegend(): null {
         [ctx, gridLayout, labelSettings]
     );
 
-    const boundsContext = useContext(BoundsContext);
+    const boundsContext = useBoundsContext();
     useEffect(() => {
         boundsContext.addXBoundsCallback(drawer);
         return () => boundsContext.removeXBoundsCallback(drawer);

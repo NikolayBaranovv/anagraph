@@ -3,6 +3,7 @@ import React, {
     ReactElement,
     ReactNode,
     useCallback,
+    useContext,
     useMemo,
     useRef,
     useState,
@@ -18,19 +19,17 @@ interface BoundsContextType {
     removeXBoundsCallback(fn: BoundsHandler): void;
 
     settledXBounds: Bounds;
-    yBounds: Bounds;
 
     onManipulation(bounds: Bounds): void;
 
     onManipulationEnd(bounds: Bounds): void;
 }
 
-export const BoundsContext = createContext<BoundsContextType>({
+const BoundsContext = createContext<BoundsContextType>({
     addXBoundsCallback: noop,
     removeXBoundsCallback: noop,
 
     settledXBounds: [0, 1],
-    yBounds: [0, 1],
 
     onManipulation: noop,
     onManipulationEnd: noop,
@@ -38,7 +37,6 @@ export const BoundsContext = createContext<BoundsContextType>({
 
 interface BoundsManagerProps {
     initialXBounds: Bounds;
-    yBounds: Bounds;
 
     children: ReactNode | ReactNode[];
 }
@@ -55,8 +53,7 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
         redrawPlanned.current = true;
         requestAnimationFrame(() => {
             redrawPlanned.current = false;
-            for (const drawer of handlers.current)
-                drawer(tmpXBounds.current ?? finalXBoundsRef.current);
+            for (const drawer of handlers.current) drawer(tmpXBounds.current ?? finalXBoundsRef.current);
         });
     }, []);
 
@@ -78,9 +75,7 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
         [queueCallHandlers]
     );
 
-    const [finalXBounds, setFinalXBounds] = useState<Bounds>(
-        props.initialXBounds
-    );
+    const [finalXBounds, setFinalXBounds] = useState<Bounds>(props.initialXBounds);
     const finalXBoundsRef = useRef(props.initialXBounds);
     const tmpXBounds = useRef<Bounds | null>(null);
 
@@ -108,21 +103,13 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
             onManipulation,
             onManipulationEnd,
             settledXBounds: finalXBounds,
-            yBounds: props.yBounds,
         }),
-        [
-            addXBoundsCallback,
-            removeXBoundsCallback,
-            onManipulation,
-            onManipulationEnd,
-            finalXBounds,
-            props.yBounds,
-        ]
+        [addXBoundsCallback, removeXBoundsCallback, onManipulation, onManipulationEnd, finalXBounds]
     );
 
-    return (
-        <BoundsContext.Provider value={context}>
-            {props.children}
-        </BoundsContext.Provider>
-    );
+    return <BoundsContext.Provider value={context}>{props.children}</BoundsContext.Provider>;
+}
+
+export function useBoundsContext(): BoundsContextType {
+    return useContext(BoundsContext);
 }

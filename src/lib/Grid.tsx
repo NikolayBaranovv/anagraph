@@ -1,12 +1,14 @@
 import { useCallback, useContext, useEffect } from "react";
-import { BoundsContext } from "./BoundsManager";
+import { useBoundsContext } from "./BoundsManager";
 import { CanvasContext } from "./Canvas";
 import { Bounds } from "./useDragAndZoom";
 import { generateTicks, generateTimeTicks, scale } from "./utils";
 import { useGridRectCpx } from "./LayoutManager";
+import { useYAxisContext } from "./YAxisProvider";
 
 export function Grid() {
-    const boundsContext = useContext(BoundsContext);
+    const boundsContext = useBoundsContext();
+    const { bounds: yBounds } = useYAxisContext();
     const { ctx } = useContext(CanvasContext);
 
     const gridRect = useGridRectCpx();
@@ -18,9 +20,8 @@ export function Grid() {
             ctx.strokeStyle = "#ccc";
             ctx.lineWidth = 1;
 
-            for (const y of generateTicks(boundsContext.yBounds, gridRect.height, 50)) {
-                const ypx =
-                    Math.round(scale(y, boundsContext.yBounds, [gridRect.y, gridRect.y + gridRect.height])) + 0.5;
+            for (const y of generateTicks(yBounds, gridRect.height, 50)) {
+                const ypx = Math.round(scale(y, yBounds, [gridRect.y, gridRect.y + gridRect.height])) + 0.5;
                 ctx.beginPath();
                 ctx.moveTo(gridRect.x, ypx);
                 ctx.lineTo(gridRect.x + gridRect.width, ypx);
@@ -35,7 +36,7 @@ export function Grid() {
                 ctx.stroke();
             }
         },
-        [ctx, gridRect, boundsContext.yBounds]
+        [ctx, gridRect, yBounds]
     );
 
     useEffect(() => {

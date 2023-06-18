@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import { BoundsContext } from "./BoundsManager";
+import React, { useState } from "react";
+import { useBoundsContext } from "./BoundsManager";
 import { useDragAndZoom } from "./useDragAndZoom";
 import { useGridRectLpx } from "./LayoutManager";
 
 export function Manipulator() {
-    const boundsContext = useContext(BoundsContext);
+    const boundsContext = useBoundsContext();
     const gridLayout = useGridRectLpx();
 
     const [glass, setGlass] = useState<HTMLDivElement | null>(null);

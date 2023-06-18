@@ -14,6 +14,7 @@ import {
     YLegend,
 } from "./lib";
 import { generateRandomData } from "./lib/utils";
+import { YAxisProvider } from "./lib/YAxisProvider";
 
 const todayStart = new Date();
 todayStart.setHours(0, 0, 0, 0);
@@ -28,28 +29,30 @@ function App() {
     return (
         <FPSManager>
             <LayoutManager>
-                <BoundsManager initialXBounds={xBounds} yBounds={yBounds}>
-                    <FPSIndicator />
-                    <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
-                        <Manipulator />
-                        <Background />
-                        <Grid />
-                        {graphData.map((graphData, i) => (
-                            <Line data={graphData} key={i} />
-                        ))}
-                        <TimeXLegend />
-                        <YLegend />
-                    </Canvas>
-                    <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
-                        <Manipulator />
-                        <Background />
-                        <Grid />
-                        {graphData.map((graphData, i) => (
-                            <Line data={graphData} key={i} />
-                        ))}
-                        <TimeXLegend />
-                        <YLegend />
-                    </Canvas>
+                <BoundsManager initialXBounds={xBounds}>
+                    <YAxisProvider bounds={yBounds}>
+                        <FPSIndicator />
+                        <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
+                            <Manipulator />
+                            <Background />
+                            <Grid />
+                            {graphData.map((graphData, i) => (
+                                <Line data={graphData} key={i} />
+                            ))}
+                            <TimeXLegend />
+                            <YLegend />
+                        </Canvas>
+                        <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
+                            <Manipulator />
+                            <Background />
+                            <Grid />
+                            {graphData.map((graphData, i) => (
+                                <Line data={graphData} key={i} />
+                            ))}
+                            <TimeXLegend />
+                            <YLegend />
+                        </Canvas>
+                    </YAxisProvider>
                 </BoundsManager>
             </LayoutManager>
         </FPSManager>

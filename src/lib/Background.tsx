@@ -1,9 +1,9 @@
 import { useCallback, useContext, useEffect } from "react";
-import { BoundsContext } from "./BoundsManager";
+import { useBoundsContext } from "./BoundsManager";
 import { CanvasContext } from "./Canvas";
 
 export function Background() {
-    const boundsContext = useContext(BoundsContext);
+    const boundsContext = useBoundsContext();
 
     const {
         ctx,

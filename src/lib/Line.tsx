@@ -1,18 +1,20 @@
 import { GraphData, scale } from "./utils";
 import { useCallback, useContext, useEffect, useMemo } from "react";
-import { BoundsContext } from "./BoundsManager";
+import { useBoundsContext } from "./BoundsManager";
 import { FPSContext } from "./fps";
 import { CanvasContext } from "./Canvas";
 import { Bounds } from "./useDragAndZoom";
 import { visualDownsample } from "./downsample";
 import { useGridRectCpx } from "./LayoutManager";
+import { useYAxisContext } from "./YAxisProvider";
 
 interface LineProps {
     data: GraphData;
 }
 
 export function Line(props: LineProps) {
-    const boundsContext = useContext(BoundsContext);
+    const boundsContext = useBoundsContext();
+    const { bounds: yBounds } = useYAxisContext();
 
     const incFrameCounter = useContext(FPSContext).incCounter;
 
@@ -31,7 +33,7 @@ export function Line(props: LineProps) {
         return grd;
     }, [ctx, gridRect]);
 
-    const [ymin, ymax] = boundsContext.yBounds;
+    const [ymin, ymax] = yBounds;
 
     const clipPath = useMemo(() => {
         const clipping = new Path2D();
