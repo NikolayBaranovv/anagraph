@@ -3,11 +3,12 @@ import { noop } from "ts-essentials";
 import { useCallbackList } from "./useCallbackList";
 
 type FPSHandler = (fps: number) => void;
+type IncCounter = (canvas: CanvasRenderingContext2D) => void;
 
 interface FPSContextType {
     addFPSHandler(callback: FPSHandler): void;
 
-    incCounter(): void;
+    incCounter: IncCounter;
 }
 
 const FPSContext = createContext<FPSContextType>({
@@ -22,17 +23,23 @@ interface FPSManagerProps {
 export function FPSManager(props: FPSManagerProps) {
     const { addCallback: addFPSHandler, callCallbacks } = useCallbackList<FPSHandler>();
 
-    const counter = useRef(0);
-    const incCounter = useCallback(() => {
-        counter.current++;
+    const counters = useRef(new WeakMap<CanvasRenderingContext2D, number>());
+    const maxCounter = useRef(0);
+    const incCounter = useCallback((canvas: CanvasRenderingContext2D) => {
+        const newValue = (counters.current.get(canvas) ?? 0) + 1;
+        counters.current.set(canvas, newValue);
+        if (newValue > maxCounter.current) {
+            maxCounter.current = newValue;
+        }
     }, []);
 
     const intervalMs = 1000;
 
     useEffect(() => {
         const int = window.setInterval(() => {
-            const fps = (counter.current / intervalMs) * 1e3;
-            counter.current = 0;
+            counters.current = new WeakMap();
+            const fps = (maxCounter.current / intervalMs) * 1e3;
+            maxCounter.current = 0;
             callCallbacks(fps);
         }, intervalMs);
         return () => window.clearInterval(int);
@@ -50,7 +57,7 @@ export function FPSIndicator() {
     useEffect(() => {
         fpsContext?.addFPSHandler((fps) => {
             if (div.current) {
-                div.current.innerText = fps.toString();
+                div.current.innerText = `FPS: ${fps}`;
             }
         });
     });
@@ -69,6 +76,6 @@ export function FPSIndicator() {
     );
 }
 
-export function useIncFPSCounter(): () => void {
+export function useIncFPSCounter(): IncCounter {
     return useContext(FPSContext).incCounter;
 }

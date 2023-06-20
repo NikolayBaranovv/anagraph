@@ -14,6 +14,7 @@ import { noop } from "ts-essentials";
 import { useBoundsContext } from "./BoundsManager";
 import { Size } from "./utils";
 import { useCallbackList } from "./useCallbackList";
+import { useIncFPSCounter } from "./fps";
 
 type DrawCallback = (ctx: CanvasRenderingContext2D) => void;
 
@@ -64,6 +65,8 @@ export function Canvas(props: CanvasProps): ReactElement {
 
     const ctx: CanvasRenderingContext2D | null = useMemo(() => canvas?.getContext("2d") ?? null, [canvas]);
 
+    const incFPSCounter = useIncFPSCounter();
+
     const redrawPlanned = useRef(false);
     const planRedraw = useCallback(() => {
         if (redrawPlanned.current || !ctx) {
@@ -73,14 +76,19 @@ export function Canvas(props: CanvasProps): ReactElement {
         redrawPlanned.current = true;
         requestAnimationFrame(() => {
             redrawPlanned.current = false;
-            callDrawers(ctx);
+            for (const fn of getDrawers()) {
+                ctx.save();
+                fn(ctx);
+                ctx.restore();
+            }
+            incFPSCounter(ctx);
         });
     }, [ctx]);
 
     const {
         addCallback: addDrawCallback,
         removeCallback: removeDrawCallback,
-        callCallbacks: callDrawers,
+        getCallbacks: getDrawers,
     } = useCallbackList<DrawCallback>(planRedraw);
 
     const { addXBoundsCallback, removeXBoundsCallback } = useBoundsContext();

@@ -15,7 +15,6 @@ export function YLegend(): null {
 
     const drawer = useCallback(
         (ctx: CanvasRenderingContext2D) => {
-            ctx.save();
             ctx.fillStyle = labelSettings.textColor;
             ctx.font = `${labelSettings.fontSize * window.devicePixelRatio}px ${labelSettings.fontFamily}`;
             ctx.textAlign = "right";
@@ -34,8 +33,6 @@ export function YLegend(): null {
                 const x = gridLayout.x - labelSettings.yLabelsGap;
                 ctx.fillText(text, x, ypx);
             }
-
-            ctx.restore();
         },
         [gridLayout, labelSettings]
     );

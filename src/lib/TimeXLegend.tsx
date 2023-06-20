@@ -34,7 +34,6 @@ export function TimeXLegend(): null {
         (ctx: CanvasRenderingContext2D) => {
             const xBounds = getCurrentXBounds();
 
-            ctx.save();
             ctx.fillStyle = labelSettings.textColor;
             ctx.textBaseline = "top";
             ctx.font = `${labelSettings.fontSize * window.devicePixelRatio}px ${labelSettings.fontFamily}`;
@@ -66,8 +65,6 @@ export function TimeXLegend(): null {
                     y += measure.fontBoundingBoxAscent + measure.fontBoundingBoxDescent;
                 }
             }
-
-            ctx.restore();
         },
         [gridLayout, labelSettings]
     );

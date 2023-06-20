@@ -1,7 +1,6 @@
 import { GraphData, scale } from "./utils";
 import { useCallback, useMemo } from "react";
 import { useBoundsContext } from "./BoundsManager";
-import { useIncFPSCounter } from "./fps";
 import { visualDownsample } from "./downsample";
 import { useGridRectCpx } from "./LayoutManager";
 import { useYAxisContext } from "./YAxisProvider";
@@ -14,8 +13,6 @@ interface LineProps {
 export const Line = function Line(props: LineProps) {
     const { getCurrentXBounds } = useBoundsContext();
     const { bounds: yBounds } = useYAxisContext();
-
-    const incFrameCounter = useIncFPSCounter();
 
     const { ctx } = useCanvasContext();
 
@@ -53,32 +50,25 @@ export const Line = function Line(props: LineProps) {
             ctx.lineJoin = "bevel";
             ctx.strokeStyle = grad;
 
-            ctx.save();
-            try {
-                ctx.clip(clipPath);
+            ctx.clip(clipPath);
 
-                const scaled = downsampled.map(([x, y]): [number, number | null] => [
-                    scale(x, effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]),
-                    y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]),
-                ]);
+            const scaled = downsampled.map(([x, y]): [number, number | null] => [
+                scale(x, effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]),
+                y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]),
+            ]);
 
-                for (let i = 0; i < scaled.length - 1; i++) {
-                    const [x1, y1] = scaled[i];
-                    const [x2, y2] = scaled[i + 1];
-                    if (y1 == null || y2 == null) continue;
+            for (let i = 0; i < scaled.length - 1; i++) {
+                const [x1, y1] = scaled[i];
+                const [x2, y2] = scaled[i + 1];
+                if (y1 == null || y2 == null) continue;
 
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(x2, y2);
-                    ctx.stroke();
-                }
-            } finally {
-                ctx.restore();
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
             }
-
-            incFrameCounter();
         },
-        [gridRect, grad, props.data, yMin, yMax, incFrameCounter]
+        [gridRect, grad, props.data, yMin, yMax]
     );
 
     useDrawCallback(draw);
