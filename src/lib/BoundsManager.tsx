@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { noop } from "ts-essentials";
 import { Bounds } from "./useDragAndZoom";
+import { useCallbackList } from "./useCallbackList";
 
 type BoundsHandler = (xBounds: Bounds) => void;
 
@@ -23,6 +24,8 @@ interface BoundsContextType {
     onManipulation(bounds: Bounds): void;
 
     onManipulationEnd(bounds: Bounds): void;
+
+    getCurrentXBounds(): Bounds;
 }
 
 const BoundsContext = createContext<BoundsContextType>({
@@ -33,6 +36,8 @@ const BoundsContext = createContext<BoundsContextType>({
 
     onManipulation: noop,
     onManipulationEnd: noop,
+
+    getCurrentXBounds: () => [0, 1],
 });
 
 interface BoundsManagerProps {
@@ -42,70 +47,44 @@ interface BoundsManagerProps {
 }
 
 export function BoundsManager(props: BoundsManagerProps): ReactElement {
-    const handlers = useRef<BoundsHandler[]>([]);
-
-    const redrawPlanned = useRef(false);
-    const queueCallHandlers = useCallback(() => {
-        if (redrawPlanned.current) {
-            return;
-        }
-
-        redrawPlanned.current = true;
-        requestAnimationFrame(() => {
-            redrawPlanned.current = false;
-            for (const drawer of handlers.current) drawer(tmpXBounds.current ?? finalXBoundsRef.current);
-        });
-    }, []);
-
-    const addXBoundsCallback = useCallback(
-        (fn: BoundsHandler) => {
-            handlers.current.push(fn);
-            queueCallHandlers();
-        },
-        [queueCallHandlers]
-    );
-    const removeXBoundsCallback = useCallback(
-        (fn: BoundsHandler) => {
-            const index = handlers.current.indexOf(fn);
-            if (index !== -1) {
-                handlers.current.splice(index, 1);
-            }
-            queueCallHandlers();
-        },
-        [queueCallHandlers]
-    );
+    const {
+        addCallback: addXBoundsCallback,
+        removeCallback: removeXBoundsCallback,
+        callCallbacks: callXBoundsCallbacks,
+    } = useCallbackList<BoundsHandler>();
 
     const [finalXBounds, setFinalXBounds] = useState<Bounds>(props.initialXBounds);
     const finalXBoundsRef = useRef(props.initialXBounds);
     const tmpXBounds = useRef<Bounds | null>(null);
 
+    const getCurrentXBounds = useRef(() => tmpXBounds.current ?? finalXBoundsRef.current).current;
+
     const onManipulation = useCallback(
         (bounds: Bounds) => {
             tmpXBounds.current = bounds;
-            queueCallHandlers();
+            callXBoundsCallbacks(bounds);
         },
-        [queueCallHandlers]
+        [callXBoundsCallbacks]
     );
     const onManipulationEnd = useCallback(
         (bounds: Bounds) => {
             tmpXBounds.current = null;
             finalXBoundsRef.current = bounds;
             setFinalXBounds(bounds);
-            queueCallHandlers();
+            callXBoundsCallbacks(bounds);
         },
-        [setFinalXBounds, queueCallHandlers]
+        [setFinalXBounds, callXBoundsCallbacks]
     );
 
-    const context = useMemo(
-        () => ({
-            addXBoundsCallback,
-            removeXBoundsCallback,
-            onManipulation,
-            onManipulationEnd,
-            settledXBounds: finalXBounds,
-        }),
-        [addXBoundsCallback, removeXBoundsCallback, onManipulation, onManipulationEnd, finalXBounds]
-    );
+    const contextValue: BoundsContextType = {
+        addXBoundsCallback,
+        removeXBoundsCallback,
+        onManipulation,
+        onManipulationEnd,
+        settledXBounds: finalXBounds,
+        getCurrentXBounds,
+    };
+    const context = useMemo(() => contextValue, Object.values(contextValue));
 
     return <BoundsContext.Provider value={context}>{props.children}</BoundsContext.Provider>;
 }

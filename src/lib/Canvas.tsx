@@ -4,20 +4,33 @@ import React, {
     ReactElement,
     ReactNode,
     useCallback,
+    useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from "react";
+import { noop } from "ts-essentials";
+import { useBoundsContext } from "./BoundsManager";
 import { Size } from "./utils";
+import { useCallbackList } from "./useCallbackList";
+
+type DrawCallback = (ctx: CanvasRenderingContext2D) => void;
 
 interface CanvasContextType {
     ctx: CanvasRenderingContext2D | null;
     canvasSizeCpx: Size;
+
+    addDrawCallback: (fn: DrawCallback) => void;
+    removeDrawCallback: (fn: DrawCallback) => void;
 }
 
-export const CanvasContext = createContext<CanvasContextType>({
+const CanvasContext = createContext<CanvasContextType>({
     ctx: null,
     canvasSizeCpx: { width: 100, height: 100 },
+
+    addDrawCallback: noop,
+    removeDrawCallback: noop,
 });
 
 interface CanvasProps {
@@ -51,14 +64,50 @@ export function Canvas(props: CanvasProps): ReactElement {
 
     const ctx: CanvasRenderingContext2D | null = useMemo(() => canvas?.getContext("2d") ?? null, [canvas]);
 
-    const context: CanvasContextType = useMemo(() => ({ ctx, canvasSizeCpx }), [ctx, canvasSizeCpx]);
+    const redrawPlanned = useRef(false);
+    const planRedraw = useCallback(() => {
+        if (redrawPlanned.current || !ctx) {
+            return;
+        }
+
+        redrawPlanned.current = true;
+        requestAnimationFrame(() => {
+            redrawPlanned.current = false;
+            callDrawers(ctx);
+        });
+    }, [ctx]);
+
+    const {
+        addCallback: addDrawCallback,
+        removeCallback: removeDrawCallback,
+        callCallbacks: callDrawers,
+    } = useCallbackList<DrawCallback>(planRedraw);
+
+    const { addXBoundsCallback, removeXBoundsCallback } = useBoundsContext();
+    useEffect(() => {
+        addXBoundsCallback(planRedraw);
+        return () => removeXBoundsCallback(planRedraw);
+    }, [planRedraw]);
+
+    const contextValue: CanvasContextType = { ctx, canvasSizeCpx, addDrawCallback, removeDrawCallback };
+    const context = useMemo(() => contextValue, Object.values(contextValue));
 
     return (
         <div className={props.className} style={{ position: "relative", height: "350px", ...props.style }}>
-            <CanvasContext.Provider value={context}>
-                <canvas ref={setCanvas} style={{ width: "100%", height: "100%" }}></canvas>
-                {props.children}
-            </CanvasContext.Provider>
+            <canvas ref={setCanvas} style={{ width: "100%", height: "100%" }}></canvas>
+            <CanvasContext.Provider value={context}>{props.children}</CanvasContext.Provider>
         </div>
     );
+}
+
+export function useCanvasContext(): CanvasContextType {
+    return useContext(CanvasContext);
+}
+
+export function useDrawCallback(fn: DrawCallback): void {
+    const { addDrawCallback, removeDrawCallback } = useCanvasContext();
+    useEffect(() => {
+        addDrawCallback(fn);
+        return () => removeDrawCallback(fn);
+    }, [addDrawCallback, removeDrawCallback, fn]);
 }

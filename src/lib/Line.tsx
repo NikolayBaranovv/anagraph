@@ -1,24 +1,23 @@
 import { GraphData, scale } from "./utils";
-import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useBoundsContext } from "./BoundsManager";
-import { FPSContext } from "./fps";
-import { CanvasContext } from "./Canvas";
-import { Bounds } from "./useDragAndZoom";
+import { useIncFPSCounter } from "./fps";
 import { visualDownsample } from "./downsample";
 import { useGridRectCpx } from "./LayoutManager";
 import { useYAxisContext } from "./YAxisProvider";
+import { useCanvasContext, useDrawCallback } from "./Canvas";
 
 interface LineProps {
     data: GraphData;
 }
 
-export function Line(props: LineProps) {
-    const boundsContext = useBoundsContext();
+export const Line = function Line(props: LineProps) {
+    const { getCurrentXBounds } = useBoundsContext();
     const { bounds: yBounds } = useYAxisContext();
 
-    const incFrameCounter = useContext(FPSContext).incCounter;
+    const incFrameCounter = useIncFPSCounter();
 
-    const { ctx } = useContext(CanvasContext);
+    const { ctx } = useCanvasContext();
 
     const gridRect = useGridRectCpx();
 
@@ -33,7 +32,7 @@ export function Line(props: LineProps) {
         return grd;
     }, [ctx, gridRect]);
 
-    const [ymin, ymax] = yBounds;
+    const [yMin, yMax] = yBounds;
 
     const clipPath = useMemo(() => {
         const clipping = new Path2D();
@@ -42,8 +41,10 @@ export function Line(props: LineProps) {
     }, [gridRect]);
 
     const draw = useCallback(
-        (effectiveXBounds: Bounds) => {
-            if (props.data.length === 0 || !ctx || !grad) return;
+        (ctx: CanvasRenderingContext2D) => {
+            if (props.data.length === 0 || !grad) return;
+
+            const effectiveXBounds = getCurrentXBounds();
 
             const downsampled = visualDownsample(props.data, effectiveXBounds, gridRect.width);
 
@@ -58,7 +59,7 @@ export function Line(props: LineProps) {
 
                 const scaled = downsampled.map(([x, y]): [number, number | null] => [
                     scale(x, effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]),
-                    y == null ? null : scale(y, [ymin, ymax], [gridRect.y + gridRect.height, gridRect.y]),
+                    y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]),
                 ]);
 
                 for (let i = 0; i < scaled.length - 1; i++) {
@@ -77,13 +78,10 @@ export function Line(props: LineProps) {
 
             incFrameCounter();
         },
-        [ctx, gridRect, grad, props.data, ymin, ymax, incFrameCounter]
+        [gridRect, grad, props.data, yMin, yMax, incFrameCounter]
     );
 
-    useEffect(() => {
-        boundsContext.addXBoundsCallback(draw);
-        return () => boundsContext.removeXBoundsCallback(draw);
-    }, [boundsContext, draw]);
+    useDrawCallback(draw);
 
     return null;
-}
+};

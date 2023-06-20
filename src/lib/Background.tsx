@@ -1,27 +1,19 @@
-import { useCallback, useContext, useEffect } from "react";
-import { useBoundsContext } from "./BoundsManager";
-import { CanvasContext } from "./Canvas";
+import { useCallback } from "react";
+import { useCanvasContext, useDrawCallback } from "./Canvas";
 
-export function Background() {
-    const boundsContext = useBoundsContext();
-
+export const Background = function Background() {
     const {
-        ctx,
         canvasSizeCpx: { width, height },
-    } = useContext(CanvasContext);
+    } = useCanvasContext();
 
-    const drawer = useCallback(() => {
-        if (!ctx) return;
+    const drawer = useCallback(
+        (ctx: CanvasRenderingContext2D) => {
+            ctx.clearRect(0, 0, width, height);
+        },
+        [width, height]
+    );
 
-        ctx.clearRect(0, 0, width, height);
-    }, [ctx, width, height]);
-
-    useEffect(() => {
-        // FIXME: why bounds!? These drawers should probably register themselves in
-        //        Canvas context, not bounds context...
-        boundsContext.addXBoundsCallback(drawer);
-        return () => boundsContext.removeXBoundsCallback(drawer);
-    }, [boundsContext, drawer]);
+    useDrawCallback(drawer);
 
     return null;
-}
+};

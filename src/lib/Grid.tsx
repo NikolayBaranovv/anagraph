@@ -1,21 +1,19 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback } from "react";
 import { useBoundsContext } from "./BoundsManager";
-import { CanvasContext } from "./Canvas";
-import { Bounds } from "./useDragAndZoom";
+import { useDrawCallback } from "./Canvas";
 import { generateTicks, generateTimeTicks, scale } from "./utils";
 import { useGridRectCpx } from "./LayoutManager";
 import { useYAxisContext } from "./YAxisProvider";
 
 export function Grid() {
-    const boundsContext = useBoundsContext();
+    const { getCurrentXBounds } = useBoundsContext();
     const { bounds: yBounds } = useYAxisContext();
-    const { ctx } = useContext(CanvasContext);
 
     const gridRect = useGridRectCpx();
 
     const drawer = useCallback(
-        (xBounds: Bounds) => {
-            if (!ctx) return;
+        (ctx: CanvasRenderingContext2D) => {
+            const xBounds = getCurrentXBounds();
 
             ctx.strokeStyle = "#ccc";
             ctx.lineWidth = 1;
@@ -36,13 +34,10 @@ export function Grid() {
                 ctx.stroke();
             }
         },
-        [ctx, gridRect, yBounds]
+        [gridRect, yBounds]
     );
 
-    useEffect(() => {
-        boundsContext.addXBoundsCallback(drawer);
-        return () => boundsContext.removeXBoundsCallback(drawer);
-    }, [boundsContext, drawer]);
+    useDrawCallback(drawer);
 
     return null;
 }

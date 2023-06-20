@@ -1,9 +1,7 @@
-import { CanvasContext } from "./Canvas";
-import { useCallback, useContext, useEffect } from "react";
+import { useDrawCallback } from "./Canvas";
+import { useCallback } from "react";
 import { useGridRectCpx, useLabelSettings } from "./LayoutManager";
-import { Bounds } from "./useDragAndZoom";
 import { generateTicks, scale } from "./utils";
-import { useBoundsContext } from "./BoundsManager";
 import { useYAxisContext } from "./YAxisProvider";
 
 function label(y: number): string {
@@ -11,16 +9,12 @@ function label(y: number): string {
 }
 
 export function YLegend(): null {
-    const { ctx } = useContext(CanvasContext);
-
     const { bounds: yBounds } = useYAxisContext();
     const gridLayout = useGridRectCpx();
     const labelSettings = useLabelSettings();
 
     const drawer = useCallback(
-        (xBounds: Bounds) => {
-            if (!ctx) return;
-
+        (ctx: CanvasRenderingContext2D) => {
             ctx.save();
             ctx.fillStyle = labelSettings.textColor;
             ctx.font = `${labelSettings.fontSize * window.devicePixelRatio}px ${labelSettings.fontFamily}`;
@@ -43,14 +37,10 @@ export function YLegend(): null {
 
             ctx.restore();
         },
-        [ctx, gridLayout, labelSettings]
+        [gridLayout, labelSettings]
     );
 
-    const boundsContext = useBoundsContext();
-    useEffect(() => {
-        boundsContext.addXBoundsCallback(drawer);
-        return () => boundsContext.removeXBoundsCallback(drawer);
-    }, [boundsContext, drawer]);
+    useDrawCallback(drawer);
 
     return null;
 }

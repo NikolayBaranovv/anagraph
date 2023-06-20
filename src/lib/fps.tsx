@@ -1,12 +1,4 @@
-import React, {
-    createContext,
-    ReactNode,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-} from "react";
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { noop } from "ts-essentials";
 
 type FPSHandler = (fps: number) => void;
@@ -17,7 +9,7 @@ interface FPSContextType {
     incCounter(): void;
 }
 
-export const FPSContext = createContext<FPSContextType>({
+const FPSContext = createContext<FPSContextType>({
     addFPSHandler: noop,
     incCounter: noop,
 });
@@ -29,10 +21,7 @@ interface FPSManagerProps {
 export function FPSManager(props: FPSManagerProps) {
     const handlers = useRef<FPSHandler[]>([]);
 
-    const addFPSHandler = useCallback(
-        (callback: FPSHandler) => handlers.current.push(callback),
-        []
-    );
+    const addFPSHandler = useCallback((callback: FPSHandler) => handlers.current.push(callback), []);
 
     const counter = useRef(0);
 
@@ -54,16 +43,9 @@ export function FPSManager(props: FPSManagerProps) {
         return () => window.clearInterval(int);
     }, []);
 
-    const context = useMemo(
-        () => ({ addFPSHandler, incCounter }),
-        [addFPSHandler, incCounter]
-    );
+    const context = useMemo(() => ({ addFPSHandler, incCounter }), [addFPSHandler, incCounter]);
 
-    return (
-        <FPSContext.Provider value={context}>
-            {props.children}
-        </FPSContext.Provider>
-    );
+    return <FPSContext.Provider value={context}>{props.children}</FPSContext.Provider>;
 }
 
 export function FPSIndicator() {
@@ -90,4 +72,8 @@ export function FPSIndicator() {
             }}
         />
     );
+}
+
+export function useIncFPSCounter(): () => void {
+    return useContext(FPSContext).incCounter;
 }

@@ -59,11 +59,6 @@ function floorInBase(value: number, base: number): number {
     return base * Math.floor(value / base);
 }
 
-// round to nearby upper multiple of base
-function ceilInBase(value: number, base: number): number {
-    return base * Math.ceil(value / base);
-}
-
 const timeUnitSizeMilliseconds = {
     microsecond: 1e-3,
     millisecond: 1,
@@ -112,7 +107,7 @@ export function* generateTimeTicks(range: Bounds, pixels: number, minSize: numbe
         const norm = delta / timeUnitSizeMilliseconds.year / magn;
 
         if (norm < 1.5) {
-            size = 1 * magn;
+            size = magn;
         } else if (norm < 3) {
             size = 2 * magn;
         } else if (norm < 7.5) {
@@ -129,7 +124,6 @@ export function* generateTimeTicks(range: Bounds, pixels: number, minSize: numbe
     const step = size * timeUnitSizeMilliseconds[unit];
 
     let d = new Date(range[0]);
-    const initialD = new Date(d.getTime());
     switch (unit) {
         case "millisecond":
             d.setMilliseconds(floorInBase(d.getMilliseconds(), size));

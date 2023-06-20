@@ -1,6 +1,6 @@
 import { createContext, ReactElement, ReactNode, useContext, useMemo } from "react";
 import { Rect } from "./utils";
-import { CanvasContext } from "./Canvas";
+import { useCanvasContext } from "./Canvas";
 
 // cpx -- canvas pixels (physical device pixels)
 // lpx -- logical pixels (css px)
@@ -54,7 +54,7 @@ export function LayoutManager(props: LayoutManagerProps): ReactElement {
 
 export function useGridRectCpx(): Rect {
     const layout = useContext(LayoutContext);
-    const { canvasSizeCpx } = useContext(CanvasContext);
+    const { canvasSizeCpx } = useCanvasContext();
 
     const dpr = window.devicePixelRatio;
 
@@ -71,7 +71,7 @@ export function useGridRectCpx(): Rect {
 
 export function useGridRectLpx(): Rect {
     const layout = useContext(LayoutContext);
-    const { canvasSizeCpx } = useContext(CanvasContext);
+    const { canvasSizeCpx } = useCanvasContext();
 
     const dpr = window.devicePixelRatio;
 

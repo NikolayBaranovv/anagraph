@@ -1,9 +1,8 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback } from "react";
 import { useGridRectCpx, useLabelSettings } from "./LayoutManager";
-import { CanvasContext } from "./Canvas";
 import { useBoundsContext } from "./BoundsManager";
 import { generateTimeTicks, scale } from "./utils";
-import { Bounds } from "./useDragAndZoom";
+import { useDrawCallback } from "./Canvas";
 
 function label(x: number, prevX: number | null): string[] {
     const dt = new Date(x);
@@ -26,14 +25,14 @@ function label(x: number, prevX: number | null): string[] {
 }
 
 export function TimeXLegend(): null {
-    const { ctx } = useContext(CanvasContext);
+    const { getCurrentXBounds } = useBoundsContext();
 
     const gridLayout = useGridRectCpx();
     const labelSettings = useLabelSettings();
 
     const drawer = useCallback(
-        (xBounds: Bounds) => {
-            if (!ctx) return;
+        (ctx: CanvasRenderingContext2D) => {
+            const xBounds = getCurrentXBounds();
 
             ctx.save();
             ctx.fillStyle = labelSettings.textColor;
@@ -70,14 +69,10 @@ export function TimeXLegend(): null {
 
             ctx.restore();
         },
-        [ctx, gridLayout, labelSettings]
+        [gridLayout, labelSettings]
     );
 
-    const boundsContext = useBoundsContext();
-    useEffect(() => {
-        boundsContext.addXBoundsCallback(drawer);
-        return () => boundsContext.removeXBoundsCallback(drawer);
-    }, [boundsContext, drawer]);
+    useDrawCallback(drawer);
 
     return null;
 }

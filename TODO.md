@@ -1,2 +1,4 @@
 - [ ] Fix touchpad zooming performance by debouncing "manipulation end" event
-- [ ] Think about better "drawers" registration
+- [ ] Proper per-canvas FPS calculation
+
+- [x] Think about better "drawers" registration

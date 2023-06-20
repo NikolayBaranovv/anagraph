@@ -4,12 +4,12 @@ import { useDragAndZoom } from "./useDragAndZoom";
 import { useGridRectLpx } from "./LayoutManager";
 
 export function Manipulator() {
-    const boundsContext = useBoundsContext();
+    const { settledXBounds, onManipulation, onManipulationEnd } = useBoundsContext();
     const gridLayout = useGridRectLpx();
 
     const [glass, setGlass] = useState<HTMLDivElement | null>(null);
 
-    useDragAndZoom(glass, boundsContext.settledXBounds, boundsContext.onManipulation, boundsContext.onManipulationEnd);
+    useDragAndZoom(glass, settledXBounds, onManipulation, onManipulationEnd);
 
     return (
         <div
