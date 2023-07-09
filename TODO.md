@@ -1,4 +1,5 @@
 - [ ] Fix touchpad zooming performance by debouncing "manipulation end" event
-- [ ] Proper per-canvas FPS calculation
+- [ ] What about bitblt optimization of horizontal drag?..
 
 - [x] Think about better "drawers" registration
+- [x] Proper per-canvas FPS calculation (almost)
