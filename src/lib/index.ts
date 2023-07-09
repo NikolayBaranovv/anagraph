@@ -8,3 +8,4 @@ export { Line } from "./Line";
 export { Manipulator } from "./Manipulator";
 export { TimeXLegend } from "./TimeXLegend";
 export { YLegend } from "./YLegend";
+export { YAxisProvider } from "./YAxisProvider";

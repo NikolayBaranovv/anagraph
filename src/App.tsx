@@ -37,7 +37,7 @@ function App() {
                             <Background />
                             <Grid />
                             {graphData.map((graphData, i) => (
-                                <Line data={graphData} key={i} />
+                                <Line data={graphData} key={i} color="#c4443b" />
                             ))}
                             <TimeXLegend />
                             <YLegend />
@@ -47,7 +47,7 @@ function App() {
                             <Background />
                             <Grid />
                             {graphData.map((graphData, i) => (
-                                <Line data={graphData} key={i} />
+                                <Line data={graphData} key={i} color="#3993DD" />
                             ))}
                             <TimeXLegend />
                             <YLegend />

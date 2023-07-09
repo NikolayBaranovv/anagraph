@@ -4,30 +4,29 @@ import { useBoundsContext } from "./BoundsManager";
 import { visualDownsample } from "./downsample";
 import { useGridRectCpx } from "./LayoutManager";
 import { useYAxisContext } from "./YAxisProvider";
-import { useCanvasContext, useDrawCallback } from "./Canvas";
+import { useDrawCallback } from "./Canvas";
 
 interface LineProps {
     data: GraphData;
+    color: string;
 }
 
 export const Line = function Line(props: LineProps) {
     const { getCurrentXBounds } = useBoundsContext();
     const { bounds: yBounds } = useYAxisContext();
 
-    const { ctx } = useCanvasContext();
-
     const gridRect = useGridRectCpx();
 
-    const grad = useMemo(() => {
-        if (ctx == null) {
-            return null;
-        }
-
-        const grd = ctx.createLinearGradient(gridRect.x, gridRect.y + gridRect.height, gridRect.x, gridRect.y);
-        grd.addColorStop(0, "red");
-        grd.addColorStop(1, "blue");
-        return grd;
-    }, [ctx, gridRect]);
+    // const grad = useMemo(() => {
+    //     if (ctx == null) {
+    //         return null;
+    //     }
+    //
+    //     const grd = ctx.createLinearGradient(gridRect.x, gridRect.y + gridRect.height, gridRect.x, gridRect.y);
+    //     grd.addColorStop(0, "red");
+    //     grd.addColorStop(1, "blue");
+    //     return grd;
+    // }, [ctx, gridRect]);
 
     const [yMin, yMax] = yBounds;
 
@@ -39,7 +38,7 @@ export const Line = function Line(props: LineProps) {
 
     const draw = useCallback(
         (ctx: CanvasRenderingContext2D) => {
-            if (props.data.length === 0 || !grad) return;
+            if (props.data.length === 0) return;
 
             const effectiveXBounds = getCurrentXBounds();
 
@@ -48,7 +47,7 @@ export const Line = function Line(props: LineProps) {
             ctx.lineWidth = 2 * window.devicePixelRatio;
             ctx.lineCap = "square";
             ctx.lineJoin = "bevel";
-            ctx.strokeStyle = grad;
+            ctx.strokeStyle = props.color;
 
             ctx.clip(clipPath);
 
@@ -68,7 +67,7 @@ export const Line = function Line(props: LineProps) {
                 ctx.stroke();
             }
         },
-        [gridRect, grad, props.data, yMin, yMax]
+        [gridRect, props.color, props.data, yMin, yMax]
     );
 
     useDrawCallback(draw);
