@@ -6,10 +6,7 @@ interface TouchDetails {
     currentX: number;
 }
 
-function iterateTouchList(
-    touchList: TouchList,
-    iterator: (touch: Touch) => void
-): void {
+function iterateTouchList(touchList: TouchList, iterator: (touch: Touch) => void): void {
     for (let i = 0; i < touchList.length; i++) {
         iterator(touchList[i]);
     }
@@ -18,6 +15,26 @@ function iterateTouchList(
 export type Bounds = Readonly<[number, number]>;
 
 const wheelZoomFactor = 1.5;
+
+interface DragAndZoomOptions {
+    boundsLimit?: Bounds;
+}
+
+export function fitBoundsInLimit(bounds: Bounds, limit: Bounds | undefined): Bounds {
+    if (limit == null) {
+        return bounds;
+    }
+
+    if (bounds[0] < limit[0]) {
+        return [limit[0], Math.min(limit[1], bounds[1] + (limit[0] - bounds[0]))];
+    }
+
+    if (bounds[1] > limit[1]) {
+        return [Math.max(limit[0], bounds[0] - (bounds[1] - limit[1])), limit[1]];
+    }
+
+    return bounds;
+}
 
 /** @function useDragAndZoom
  *
@@ -45,12 +62,14 @@ const wheelZoomFactor = 1.5;
  * @param viewport  Отрезок на некоей шкале, соответствующий элементу element
  * @param onChange  Коллбэк, который будет вызываться в процессе манипуляций
  * @param onEnd     Коллбэк, который вызовется при завершении манипуляции
+ * @param options   Дополнительные параметры
  */
 export function useDragAndZoom(
     element: HTMLElement | null,
     viewport: Bounds,
     onChange: (viewport: Bounds) => void,
-    onEnd: (viewport: Bounds) => void
+    onEnd: (viewport: Bounds) => void,
+    options: DragAndZoomOptions = {},
 ): void {
     // FIXME: возможно можно избежать лишних rebind'ов если хранить viewport
     //        в Ref'е. Он ведь нужен только в момент первого нажатия, кажется
@@ -62,13 +81,9 @@ export function useDragAndZoom(
         const touchInfo: SafeDictionary<TouchDetails, number | string> = {};
         let temporaryViewport: Bounds = viewport;
 
-        function calcXInTemporaryViewport(
-            pageX: number,
-            bounds: DOMRect
-        ): number {
+        function calcXInTemporaryViewport(pageX: number, bounds: DOMRect): number {
             return (
-                ((pageX - bounds.left) / bounds.width) *
-                    (temporaryViewport[1] - temporaryViewport[0]) +
+                ((pageX - bounds.left) / bounds.width) * (temporaryViewport[1] - temporaryViewport[0]) +
                 temporaryViewport[0]
             );
         }
@@ -82,10 +97,7 @@ export function useDragAndZoom(
 
                 if (touch != null) {
                     const vpDiff = touch.currentX - touch.originX;
-                    temporaryViewport = [
-                        temporaryViewport[0] - vpDiff,
-                        temporaryViewport[1] - vpDiff,
-                    ];
+                    temporaryViewport = [temporaryViewport[0] - vpDiff, temporaryViewport[1] - vpDiff];
                 }
             } else if (touchesCount == 2) {
                 const touch1 = touchInfo[touchIds[0]];
@@ -102,12 +114,11 @@ export function useDragAndZoom(
                     const k = (prev1 - prev2) / (new1 - new2);
                     const b = prev1 - k * new1;
 
-                    temporaryViewport = [
-                        k * temporaryViewport[0] + b,
-                        k * temporaryViewport[1] + b,
-                    ];
+                    temporaryViewport = [k * temporaryViewport[0] + b, k * temporaryViewport[1] + b];
                 }
             }
+
+            temporaryViewport = fitBoundsInLimit(temporaryViewport, options.boundsLimit);
 
             onChange(temporaryViewport);
         };
@@ -137,12 +148,11 @@ export function useDragAndZoom(
         };
 
         const onTouchEnd = (event: TouchEvent) => {
-            iterateTouchList(
-                event.changedTouches,
-                (touch) => delete touchInfo[touch.identifier]
-            );
+            iterateTouchList(event.changedTouches, (touch) => delete touchInfo[touch.identifier]);
 
-            if (Object.keys(touchInfo).length == 0) onEnd(temporaryViewport);
+            if (Object.keys(touchInfo).length == 0) {
+                onEnd(temporaryViewport);
+            }
         };
 
         const onPointerUp = (event: PointerEvent) => {
@@ -159,10 +169,7 @@ export function useDragAndZoom(
             iterateTouchList(event.changedTouches, (touch) => {
                 const info = touchInfo[touch.identifier];
                 if (info) {
-                    info.currentX = calcXInTemporaryViewport(
-                        touch.pageX,
-                        bounds
-                    );
+                    info.currentX = calcXInTemporaryViewport(touch.pageX, bounds);
                 }
             });
             updateTemporaryViewport();
@@ -187,10 +194,10 @@ export function useDragAndZoom(
 
             const factor = Math.pow(wheelZoomFactor, event.deltaY / 53);
 
-            temporaryViewport = [
-                x - (x - temporaryViewport[0]) * factor,
-                x + (temporaryViewport[1] - x) * factor,
-            ];
+            temporaryViewport = fitBoundsInLimit(
+                [x - (x - temporaryViewport[0]) * factor, x + (temporaryViewport[1] - x) * factor],
+                options.boundsLimit,
+            );
 
             onEnd(temporaryViewport);
         };
@@ -214,5 +221,5 @@ export function useDragAndZoom(
             element.removeEventListener("pointerup", onPointerUp);
             element.removeEventListener("pointermove", onPointerMove);
         };
-    }, [element, onChange, onEnd, viewport]);
+    }, [element, onChange, onEnd, viewport, options.boundsLimit]);
 }

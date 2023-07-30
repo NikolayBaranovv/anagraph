@@ -33,7 +33,7 @@ function App() {
                     <YAxisProvider bounds={yBounds}>
                         <FPSIndicator />
                         <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
-                            <Manipulator />
+                            <Manipulator boundsLimit={xBounds} />
                             <Background />
                             <Grid />
                             {graphData.map((graphData, i) => (
@@ -43,7 +43,7 @@ function App() {
                             <YLegend />
                         </Canvas>
                         <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0", marginBottom: "12px" }}>
-                            <Manipulator />
+                            <Manipulator boundsLimit={xBounds} />
                             <Background />
                             <Grid />
                             {graphData.map((graphData, i) => (
