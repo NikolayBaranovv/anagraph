@@ -69,8 +69,11 @@ export function FPSIndicator() {
                 position: "fixed",
                 left: 0,
                 bottom: 0,
-                width: "64px",
+                width: "128px",
                 padding: "5px",
+                color: "#fff",
+                background: "rgba(0, 0, 0, 0.6)",
+                zIndex: 9999,
             }}
         />
     );
