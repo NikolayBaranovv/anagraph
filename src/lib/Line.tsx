@@ -57,8 +57,12 @@ export const Line = function Line(props: LineProps) {
             ]);
 
             for (let i = 0; i < scaled.length - 1; i++) {
-                const [x1, y1] = scaled[i];
-                const [x2, y2] = scaled[i + 1];
+                const scaled_i = scaled[i];
+                const scaled_ip1 = scaled[i + 1];
+                const x1 = scaled_i[0],
+                    y1 = scaled_i[1];
+                const x2 = scaled_ip1[0],
+                    y2 = scaled_ip1[1];
                 if (y1 == null || y2 == null) continue;
 
                 ctx.beginPath();
@@ -67,7 +71,7 @@ export const Line = function Line(props: LineProps) {
                 ctx.stroke();
             }
         },
-        [gridRect, props.color, props.data, yMin, yMax]
+        [gridRect, props.color, props.data, yMin, yMax],
     );
 
     useDrawCallback(draw);

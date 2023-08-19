@@ -104,12 +104,10 @@ export function useDragAndZoom(
                 const touch2 = touchInfo[touchIds[1]];
 
                 if (touch1 != null && touch2 != null) {
-                    const [prev1, prev2, new1, new2] = [
-                        Math.min(touch1.originX, touch2.originX),
-                        Math.max(touch1.originX, touch2.originX),
-                        Math.min(touch1.currentX, touch2.currentX),
-                        Math.max(touch1.currentX, touch2.currentX),
-                    ];
+                    const prev1 = Math.min(touch1.originX, touch2.originX);
+                    const prev2 = Math.max(touch1.originX, touch2.originX);
+                    const new1 = Math.min(touch1.currentX, touch2.currentX);
+                    const new2 = Math.max(touch1.currentX, touch2.currentX);
 
                     const k = (prev1 - prev2) / (new1 - new2);
                     const b = prev1 - k * new1;

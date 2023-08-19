@@ -92,8 +92,12 @@ export function* generateTimeTicks(range: Bounds, pixels: number, minSize: numbe
 
     let i: number;
     for (i = 0; i < possibleTicks.length - 1; i++) {
-        const [value, unit] = possibleTicks[i];
-        const [nextValue, nextUnit] = possibleTicks[i + 1];
+        const possibleTicks_i = possibleTicks[i];
+        const possibleTicks_ip1 = possibleTicks[i + 1];
+        const value = possibleTicks_i[0],
+            unit = possibleTicks_i[1];
+        const nextValue = possibleTicks_ip1[0],
+            nextUnit = possibleTicks_ip1[1];
         const size = value * timeUnitSizeMilliseconds[unit];
         const nextSize = nextValue * timeUnitSizeMilliseconds[nextUnit];
         if (delta < (size + nextSize) / 2 && size >= minSize) {
@@ -101,7 +105,9 @@ export function* generateTimeTicks(range: Bounds, pixels: number, minSize: numbe
         }
     }
 
-    let [size, unit] = possibleTicks[i];
+    const possibleTicks_i = possibleTicks[i];
+    let size = possibleTicks_i[0];
+    let unit = possibleTicks_i[1];
     if (unit == "year") {
         const magn = parseFloat("1e" + Math.floor(Math.log(delta / timeUnitSizeMilliseconds.year / Math.LN10)));
         const norm = delta / timeUnitSizeMilliseconds.year / magn;
