@@ -12,7 +12,7 @@ export function Grid() {
     const gridRect = useGridRectCpx();
 
     const drawer = useCallback(
-        (ctx: CanvasRenderingContext2D) => {
+        function drawGrid(ctx: CanvasRenderingContext2D) {
             const xBounds = getCurrentXBounds();
 
             ctx.strokeStyle = "#ccc";
@@ -34,7 +34,7 @@ export function Grid() {
                 ctx.stroke();
             }
         },
-        [gridRect, yBounds]
+        [gridRect, yBounds],
     );
 
     useDrawCallback(drawer);

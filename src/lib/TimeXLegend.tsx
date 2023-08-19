@@ -31,7 +31,7 @@ export function TimeXLegend(): null {
     const labelSettings = useLabelSettings();
 
     const drawer = useCallback(
-        (ctx: CanvasRenderingContext2D) => {
+        function drawTimeXLegend(ctx: CanvasRenderingContext2D) {
             const xBounds = getCurrentXBounds();
 
             ctx.fillStyle = labelSettings.textColor;

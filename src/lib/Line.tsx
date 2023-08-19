@@ -17,17 +17,6 @@ export const Line = function Line(props: LineProps) {
 
     const gridRect = useGridRectCpx();
 
-    // const grad = useMemo(() => {
-    //     if (ctx == null) {
-    //         return null;
-    //     }
-    //
-    //     const grd = ctx.createLinearGradient(gridRect.x, gridRect.y + gridRect.height, gridRect.x, gridRect.y);
-    //     grd.addColorStop(0, "red");
-    //     grd.addColorStop(1, "blue");
-    //     return grd;
-    // }, [ctx, gridRect]);
-
     const [yMin, yMax] = yBounds;
 
     const clipPath = useMemo(() => {
@@ -37,7 +26,7 @@ export const Line = function Line(props: LineProps) {
     }, [gridRect]);
 
     const draw = useCallback(
-        (ctx: CanvasRenderingContext2D) => {
+        function drawLine(ctx: CanvasRenderingContext2D) {
             if (props.data.length === 0) return;
 
             const effectiveXBounds = getCurrentXBounds();
@@ -51,10 +40,14 @@ export const Line = function Line(props: LineProps) {
 
             ctx.clip(clipPath);
 
-            const scaled = downsampled.map(([x, y]): [number, number | null] => [
-                scale(x, effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]),
-                y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]),
-            ]);
+            const scaled = new Array(downsampled.length);
+            for (let i = 0, len = downsampled.length; i < len; i++) {
+                const [x, y] = downsampled[i];
+                scaled[i] = [
+                    scale(x, effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]),
+                    y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]),
+                ];
+            }
 
             for (let i = 0; i < scaled.length - 1; i++) {
                 const scaled_i = scaled[i];

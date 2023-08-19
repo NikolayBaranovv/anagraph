@@ -14,7 +14,7 @@ export function YLegend(): null {
     const labelSettings = useLabelSettings();
 
     const drawer = useCallback(
-        (ctx: CanvasRenderingContext2D) => {
+        function drawYLegend(ctx: CanvasRenderingContext2D) {
             ctx.fillStyle = labelSettings.textColor;
             ctx.font = `${labelSettings.fontSize * window.devicePixelRatio}px ${labelSettings.fontFamily}`;
             ctx.textAlign = "right";
@@ -26,7 +26,7 @@ export function YLegend(): null {
                     gridLayout.x - labelSettings.bulletRadius,
                     ypx - labelSettings.bulletRadius,
                     labelSettings.bulletRadius * 2,
-                    labelSettings.bulletRadius * 2
+                    labelSettings.bulletRadius * 2,
                 );
 
                 const text = label(y);
@@ -34,7 +34,7 @@ export function YLegend(): null {
                 ctx.fillText(text, x, ypx);
             }
         },
-        [gridLayout, labelSettings]
+        [gridLayout, labelSettings],
     );
 
     useDrawCallback(drawer);

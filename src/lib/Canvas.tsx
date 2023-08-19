@@ -46,7 +46,7 @@ export function Canvas(props: CanvasProps): ReactElement {
     const [canvasSizeCpx, setCanvasSizeCpx] = useState<Size>({ width: 100, height: 100 });
 
     const onCanvasResize = useCallback(
-        (entries: ResizeObserverEntry[]) => {
+        function onCanvasResize(entries: ResizeObserverEntry[]) {
             if (canvas == null) return;
             canvas.width = entries[0].devicePixelContentBoxSize[0].inlineSize;
             canvas.height = entries[0].devicePixelContentBoxSize[0].blockSize;
@@ -68,23 +68,26 @@ export function Canvas(props: CanvasProps): ReactElement {
     const incFPSCounter = useIncFPSCounter();
 
     const redrawPlanned = useRef(false);
-    const planRedraw = useCallback(() => {
-        if (redrawPlanned.current || !ctx) {
-            return;
-        }
-
-        redrawPlanned.current = true;
-        requestAnimationFrame(() => {
-            redrawPlanned.current = false;
-            const drawers = getDrawers();
-            for (let i = 0, len = drawers.length; i < len; i++) {
-                ctx.save();
-                drawers[i](ctx);
-                ctx.restore();
+    const planRedraw = useCallback(
+        function planRedraw() {
+            if (redrawPlanned.current || !ctx) {
+                return;
             }
-            incFPSCounter(ctx);
-        });
-    }, [ctx, incFPSCounter]);
+
+            redrawPlanned.current = true;
+            requestAnimationFrame(function raf() {
+                redrawPlanned.current = false;
+                const drawers = getDrawers();
+                for (let i = 0, len = drawers.length; i < len; i++) {
+                    ctx.save();
+                    drawers[i](ctx);
+                    ctx.restore();
+                }
+                incFPSCounter(ctx);
+            });
+        },
+        [ctx, incFPSCounter],
+    );
 
     const {
         addCallback: addDrawCallback,
