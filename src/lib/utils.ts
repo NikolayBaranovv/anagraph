@@ -1,7 +1,7 @@
 import { Bounds } from "./useDragAndZoom";
 
-export function scale(value: number, [oldMin, oldMax]: Bounds, [newMin, newMax]: Bounds): number {
-    return ((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin;
+export function scale(value: number, oldBounds: Bounds, newBounds: Bounds): number {
+    return ((value - oldBounds[0]) / (oldBounds[1] - oldBounds[0])) * (newBounds[1] - newBounds[0]) + newBounds[0];
 }
 
 export type GraphData = [number, number][];

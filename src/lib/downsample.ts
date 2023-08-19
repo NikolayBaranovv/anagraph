@@ -26,7 +26,10 @@ export function binarySearchByIndex0<T extends ArrayWithFirstTyped<V>, V>(data: 
 
 type DataPoint = [number, number | null];
 
-export function visualDownsample(data: DataPoint[], [min_x, max_x]: Bounds, pnt_count: number): DataPoint[] {
+export function visualDownsample(data: DataPoint[], bounds: Bounds, pnt_count: number): DataPoint[] {
+    const min_x = bounds[0],
+        max_x = bounds[1];
+
     if (pnt_count <= 0) return [];
 
     const left = binarySearchByIndex0(data, min_x).r;
