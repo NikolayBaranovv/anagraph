@@ -17,7 +17,8 @@ export const Line = function Line(props: LineProps) {
 
     const gridRect = useGridRectCpx();
 
-    const [yMin, yMax] = yBounds;
+    const yMin = yBounds[0];
+    const yMax = yBounds[1];
 
     const clipPath = useMemo(() => {
         const clipping = new Path2D();
@@ -42,7 +43,8 @@ export const Line = function Line(props: LineProps) {
 
             const scaled = new Array(downsampled.length);
             for (let i = 0, len = downsampled.length; i < len; i++) {
-                const [x, y] = downsampled[i];
+                const x = downsampled[i][0];
+                const y = downsampled[i][1];
                 scaled[i] = [
                     scale(x, effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]),
                     y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]),
