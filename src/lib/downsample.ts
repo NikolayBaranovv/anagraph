@@ -26,8 +26,19 @@ export function binarySearchByIndex0<T extends ArrayWithFirstTyped<V>, V>(data: 
 
 type DataPoint = [number, number | null];
 
+let totalCnt = 0;
+let totalMs = 0;
+
+// @ts-ignore
+window.qqq = () => {
+    console.log("total cnt", totalCnt, "ms", totalMs, totalMs / totalCnt);
+    totalCnt = 0;
+    totalMs = 0;
+};
+
 export function visualDownsample(data: DataPoint[], [min_x, max_x]: Bounds, pnt_count: number): DataPoint[] {
-    console.time("visualDownsample");
+    // console.time("visualDownsample");
+    totalMs -= performance.now();
     try {
         if (pnt_count <= 0) return [];
 
@@ -44,6 +55,7 @@ export function visualDownsample(data: DataPoint[], [min_x, max_x]: Bounds, pnt_
         bucket_l -= bucket_l % x_per_bucket;
 
         const output: DataPoint[] = [data[0]];
+        let outputPos = 1;
 
         let i = 0;
 
@@ -71,21 +83,43 @@ export function visualDownsample(data: DataPoint[], [min_x, max_x]: Bounds, pnt_
                 i++;
             }
 
-            if (first_null) output.push([bucket_l, null]);
-            else if (first != null) output.push(first);
+            if (first_null) {
+                // output.push([bucket_l, null]);
+                output[outputPos++] = [bucket_l, null];
+            } else if (first != null) {
+                // output.push(first);
+                output[outputPos++] = first;
+            }
 
             if (min != null && max != null) {
                 if (min[0] < max[0]) {
-                    if (min[0] !== first?.[0]) output.push(min);
-                    if (max[0] !== last?.[0]) output.push(max);
+                    if (min[0] !== first?.[0]) {
+                        // output.push(min);
+                        output[outputPos++] = min;
+                    }
+                    if (max[0] !== last?.[0]) {
+                        // output.push(max);
+                        output[outputPos++] = max;
+                    }
                 } else {
-                    if (max[0] !== first?.[0]) output.push(max);
-                    if (min[0] !== last?.[0]) output.push(min);
+                    if (max[0] !== first?.[0]) {
+                        // output.push(max);
+                        output[outputPos++] = max;
+                    }
+                    if (min[0] !== last?.[0]) {
+                        // output.push(min);
+                        output[outputPos++] = min;
+                    }
                 }
             }
 
-            if (last_null) output.push([bucket_r - 1, null]);
-            else if (last != null) output.push(last);
+            if (last_null) {
+                // output.push([bucket_r - 1, null]);
+                output[outputPos++] = [bucket_r - 1, null];
+            } else if (last != null) {
+                // output.push(last);
+                output[outputPos++] = last;
+            }
 
             if (i >= data_length) break;
 
@@ -94,6 +128,7 @@ export function visualDownsample(data: DataPoint[], [min_x, max_x]: Bounds, pnt_
 
         return output;
     } finally {
-        console.timeEnd("visualDownsample");
+        totalMs += performance.now();
+        totalCnt++;
     }
 }
