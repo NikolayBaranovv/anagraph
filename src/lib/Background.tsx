@@ -8,9 +8,10 @@ export const Background = function Background() {
 
     const drawer = useCallback(
         (ctx: CanvasRenderingContext2D) => {
+            console.log("clearRect");
             ctx.clearRect(0, 0, width, height);
         },
-        [width, height]
+        [width, height],
     );
 
     useDrawCallback(drawer);
