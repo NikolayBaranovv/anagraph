@@ -12,9 +12,10 @@ export function useCallbackList<T extends (...args: any[]) => void>(onChange?: (
 
     const getCallbacks = useCallback(() => callbacks.current, []);
 
-    const callCallbacks = useCallback((...args: Parameters<T>) => {
-        for (const fn of callbacks.current) {
-            fn(...args);
+    const callCallbacks = useCallback(function () {
+        for (let i = 0, len = callbacks.current.length; i < len; i++) {
+            // @ts-ignore
+            callbacks.current[i].apply(null, arguments);
         }
     }, []);
 

@@ -45,28 +45,29 @@ export function TimeXLegend(): null {
             for (const x of generateTimeTicks(
                 xBounds,
                 gridLayout.width,
-                (sampleSize.width / gridLayout.width) * (xBounds[1] - xBounds[0]) * 1.3
+                (sampleSize.width / gridLayout.width) * (xBounds[1] - xBounds[0]) * 1.3,
             )) {
                 const xpx = Math.round(scale(x, xBounds, [gridLayout.x, gridLayout.x + gridLayout.width]));
                 ctx.fillRect(
                     xpx - labelSettings.bulletRadius,
                     gridLayout.y + gridLayout.height - labelSettings.bulletRadius,
                     labelSettings.bulletRadius * 2,
-                    labelSettings.bulletRadius * 2
+                    labelSettings.bulletRadius * 2,
                 );
 
                 const text = label(x, prevX);
                 prevX = x;
 
                 let y = gridLayout.y + gridLayout.height + labelSettings.xLabelsGap;
-                for (const line of text) {
+                for (let i = 0, len = text.length; i < len; i++) {
+                    const line = text[i];
                     const measure: TextMetrics = ctx.measureText(line);
                     ctx.fillText(line, xpx - measure.width / 2, y);
                     y += measure.fontBoundingBoxAscent + measure.fontBoundingBoxDescent;
                 }
             }
         },
-        [gridLayout, labelSettings]
+        [gridLayout, labelSettings],
     );
 
     useDrawCallback(drawer);
