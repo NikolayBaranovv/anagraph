@@ -10,9 +10,7 @@ interface CallbackList<T extends (...args: any[]) => void> {
 export function useCallbackList<T extends (...args: any[]) => void>(onChange?: () => void): CallbackList<T> {
     const callbacks = useRef<T[]>([]);
 
-    const getCallbacks = useCallback(() => {
-        return callbacks.current;
-    }, []);
+    const getCallbacks = useCallback(() => callbacks.current, []);
 
     const callCallbacks = useCallback((...args: Parameters<T>) => {
         for (const fn of callbacks.current) {
@@ -25,7 +23,7 @@ export function useCallbackList<T extends (...args: any[]) => void>(onChange?: (
             callbacks.current.push(fn);
             onChange?.();
         },
-        [onChange]
+        [onChange],
     );
     const removeCallback = useCallback(
         (fn: T) => {
@@ -35,7 +33,7 @@ export function useCallbackList<T extends (...args: any[]) => void>(onChange?: (
             }
             onChange?.();
         },
-        [onChange]
+        [onChange],
     );
 
     return {

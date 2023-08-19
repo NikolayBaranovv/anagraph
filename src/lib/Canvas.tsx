@@ -52,7 +52,7 @@ export function Canvas(props: CanvasProps): ReactElement {
             canvas.height = entries[0].devicePixelContentBoxSize[0].blockSize;
             setCanvasSizeCpx({ width: canvas.width, height: canvas.height });
         },
-        [canvas, setCanvasSizeCpx]
+        [canvas, setCanvasSizeCpx],
     );
 
     const sizeObserver = useMemo(() => new ResizeObserver(onCanvasResize), [onCanvasResize]);
@@ -76,14 +76,15 @@ export function Canvas(props: CanvasProps): ReactElement {
         redrawPlanned.current = true;
         requestAnimationFrame(() => {
             redrawPlanned.current = false;
-            for (const fn of getDrawers()) {
+            const drawers = getDrawers();
+            for (let i = 0, len = drawers.length; i < len; i++) {
                 ctx.save();
-                fn(ctx);
+                drawers[i](ctx);
                 ctx.restore();
             }
             incFPSCounter(ctx);
         });
-    }, [ctx]);
+    }, [ctx, incFPSCounter]);
 
     const {
         addCallback: addDrawCallback,
