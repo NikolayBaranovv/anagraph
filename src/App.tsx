@@ -23,7 +23,8 @@ const yBounds: Bounds = [-100, 100];
 const n = 60 * 24 * 31;
 const nGraphs = 3;
 
-const graphData = new Array(nGraphs).fill(0).map((_, index) => generateRandomData(xBounds, yBounds, n, index));
+const graphData1 = new Array(nGraphs).fill(0).map((_, index) => generateRandomData(xBounds, yBounds, n, index));
+const graphData2 = new Array(nGraphs).fill(0).map((_, index) => generateRandomData(xBounds, yBounds, n, index));
 
 function App() {
     return (
@@ -36,7 +37,7 @@ function App() {
                             <Manipulator boundsLimit={xBounds} />
                             <Background />
                             <Grid />
-                            {graphData.map((graphData, i) => (
+                            {graphData1.map((graphData, i) => (
                                 <Line data={graphData} key={i} color="#c4443b" />
                             ))}
                             <TimeXLegend />
@@ -46,7 +47,7 @@ function App() {
                             <Manipulator boundsLimit={xBounds} />
                             <Background />
                             <Grid />
-                            {graphData.map((graphData, i) => (
+                            {graphData2.map((graphData, i) => (
                                 <Line data={graphData} key={i} color="#3993DD" />
                             ))}
                             <TimeXLegend />

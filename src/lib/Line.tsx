@@ -45,39 +45,28 @@ export const Line = function Line(props: LineProps) {
 
             ctx.clip(clipPath);
 
+            // Math.round() is here because canvas is faster with integer coordinates
             for (let i = 0, len = downX.length; i < len; i++) {
-                downX[i] = scale(downX[i], effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]);
+                downX[i] = Math.round(scale(downX[i], effectiveXBounds, [gridRect.x, gridRect.x + gridRect.width]));
             }
             for (let i = 0, len = downY.length; i < len; i++) {
                 const y = downY[i];
-                downY[i] = y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]);
+                downY[i] =
+                    y == null ? null : Math.round(scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]));
             }
 
-            // for (let i = 0; i < downX.length - 1; i++) {
-            //     const x1 = downX[i],
-            //         y1 = downY[i];
-            //     const x2 = downX[i + 1],
-            //         y2 = downY[i + 1];
-            //     if (y1 == null || y2 == null) continue;
-            //
-            //     ctx.beginPath();
-            //     ctx.moveTo(x1, y1);
-            //     ctx.lineTo(x2, y2);
-            //     ctx.stroke();
-            // }
-
             ctx.beginPath();
-            let moved = false;
+            let penDown = false;
             for (let i = 0; i < downX.length; i++) {
                 const x = downX[i],
                     y = downY[i];
                 if (y == null) {
-                    moved = false;
+                    penDown = false;
                     continue;
                 }
-                if (!moved) {
+                if (!penDown) {
                     ctx.moveTo(x, y);
-                    moved = true;
+                    penDown = true;
                 } else {
                     ctx.lineTo(x, y);
                 }
