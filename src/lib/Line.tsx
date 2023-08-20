@@ -36,6 +36,8 @@ export const Line = function Line(props: LineProps) {
             const downX = downsampled_B[0],
                 downY = downsampled_B[1];
 
+            if (downX.length === 0) return;
+
             ctx.lineWidth = 2 * window.devicePixelRatio;
             ctx.lineCap = "square";
             ctx.lineJoin = "bevel";
@@ -51,18 +53,36 @@ export const Line = function Line(props: LineProps) {
                 downY[i] = y == null ? null : scale(y, [yMin, yMax], [gridRect.y + gridRect.height, gridRect.y]);
             }
 
-            for (let i = 0; i < downX.length - 1; i++) {
-                const x1 = downX[i],
-                    y1 = downY[i];
-                const x2 = downX[i + 1],
-                    y2 = downY[i + 1];
-                if (y1 == null || y2 == null) continue;
+            // for (let i = 0; i < downX.length - 1; i++) {
+            //     const x1 = downX[i],
+            //         y1 = downY[i];
+            //     const x2 = downX[i + 1],
+            //         y2 = downY[i + 1];
+            //     if (y1 == null || y2 == null) continue;
+            //
+            //     ctx.beginPath();
+            //     ctx.moveTo(x1, y1);
+            //     ctx.lineTo(x2, y2);
+            //     ctx.stroke();
+            // }
 
-                ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.stroke();
+            ctx.beginPath();
+            let moved = false;
+            for (let i = 0; i < downX.length; i++) {
+                const x = downX[i],
+                    y = downY[i];
+                if (y == null) {
+                    moved = false;
+                    continue;
+                }
+                if (!moved) {
+                    ctx.moveTo(x, y);
+                    moved = true;
+                } else {
+                    ctx.lineTo(x, y);
+                }
             }
+            ctx.stroke();
         },
         [gridRect, props.color, props.data, yMin, yMax],
     );
