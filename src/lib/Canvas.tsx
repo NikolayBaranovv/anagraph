@@ -19,7 +19,6 @@ import { useIncFPSCounter } from "./fps";
 type DrawCallback = (ctx: CanvasRenderingContext2D) => void;
 
 interface CanvasContextType {
-    ctx: CanvasRenderingContext2D | null;
     canvasSizeCpx: Size;
 
     addDrawCallback: (fn: DrawCallback) => void;
@@ -27,7 +26,6 @@ interface CanvasContextType {
 }
 
 const CanvasContext = createContext<CanvasContextType>({
-    ctx: null,
     canvasSizeCpx: { width: 100, height: 100 },
 
     addDrawCallback: noop,
@@ -101,7 +99,7 @@ export function Canvas(props: CanvasProps): ReactElement {
         return () => removeXBoundsCallback(planRedraw);
     }, [planRedraw]);
 
-    const contextValue: CanvasContextType = { ctx, canvasSizeCpx, addDrawCallback, removeDrawCallback };
+    const contextValue: CanvasContextType = { canvasSizeCpx, addDrawCallback, removeDrawCallback };
     const context = useMemo(() => contextValue, Object.values(contextValue));
 
     return (

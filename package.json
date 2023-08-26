@@ -1,6 +1,6 @@
 {
   "name": "anagraph",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "homepage": "https://ilyaskriblovsky.github.io/anagraph",
   "main": "dist/anagraph.js",
   "module": "dist/anagraph.esm.js",
@@ -49,6 +49,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.57",
+    "@types/offscreencanvas": "^2019.7.0",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
     "babel-jest": "^29.6.1",
