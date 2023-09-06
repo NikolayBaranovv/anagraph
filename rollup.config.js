@@ -48,8 +48,8 @@ export default [
             resolve(),
             commonjs(),
             typescript({ tsconfig: "./tsconfig.json" }),
-            serve({ contentBase: "dist", open: true }),
-            livereload("dist"),
+            process.env.LIVE && serve({ contentBase: "dist", open: true }),
+            process.env.LIVE && livereload("dist"),
         ],
     },
 ];
