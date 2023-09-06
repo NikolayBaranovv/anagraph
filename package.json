@@ -1,6 +1,6 @@
 {
   "name": "anagraph",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "homepage": "https://ilyaskriblovsky.github.io/anagraph",
   "main": "dist/anagraph.js",
   "module": "dist/anagraph.esm.js",
@@ -14,9 +14,9 @@
     "url": "https://github.com/IlyaSkriblovsky/anagraph/"
   },
   "scripts": {
-    "start": "rollup -c --bundleConfigAsCjs --watch --environment LIVE",
-    "build": "rollup -c --bundleConfigAsCjs",
-    "build-example": "rollup -c --bundleConfigAsCjs",
+    "start": "rollup -c rollup.demo.config.js --bundleConfigAsCjs --watch --environment LIVE",
+    "build": "rollup -c rollup.lib.config.js --bundleConfigAsCjs",
+    "build-example": "rollup -c rollup.demo.config.js --bundleConfigAsCjs",
     "test": "jest"
   },
   "eslintConfig": {
