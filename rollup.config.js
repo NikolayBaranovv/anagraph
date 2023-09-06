@@ -7,6 +7,7 @@ import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 import replace from "rollup-plugin-replace";
+import html from "@rollup/plugin-html";
 
 const packageJson = require("./package.json");
 
@@ -47,6 +48,7 @@ export default [
             }),
             resolve(),
             commonjs(),
+            html({ title: "Anagraph" }),
             typescript({ tsconfig: "./tsconfig.json" }),
             process.env.LIVE && serve({ contentBase: "dist", open: true }),
             process.env.LIVE && livereload("dist"),
