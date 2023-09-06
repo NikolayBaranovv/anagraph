@@ -66,5 +66,9 @@
     "tslib": "^2.6.2",
     "typescript": "^4.8.2",
     "web-vitals": "^2.1.4"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.22.15",
+    "@babel/preset-react": "^7.22.15"
   }
 }

@@ -48,7 +48,7 @@ export default [
             }),
             resolve(),
             commonjs(),
-            html({ title: "Anagraph" }),
+            html({ title: "Anagraph Demo" }),
             typescript({ tsconfig: "./tsconfig.json" }),
             process.env.LIVE && serve({ contentBase: "dist", open: true }),
             process.env.LIVE && livereload("dist"),
