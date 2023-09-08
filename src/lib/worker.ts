@@ -214,6 +214,7 @@ function setXBoundsAndRedraw(xBounds_: Bounds) {
         drawPlanned = true;
         requestAnimationFrame(() => {
             drawLatestInstructions();
+            framesDrawn++;
             drawPlanned = false;
         });
     }

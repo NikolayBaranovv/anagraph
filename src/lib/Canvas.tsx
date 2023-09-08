@@ -94,12 +94,12 @@ export function Canvas(props: CanvasProps): ReactElement {
     const setFPSCounter = useSetFPSCounter();
 
     useEffect(() => {
-        function onMessage(event: MessageEvent<WorkerToMainMessage>) {
-            if (!worker) return;
+        if (!worker) return;
 
+        function onMessage(event: MessageEvent<WorkerToMainMessage>) {
             switch (event.data.type) {
                 case "stats": {
-                    setFPSCounter(worker, event.data.fps);
+                    setFPSCounter(event.data.fps);
                     break;
                 }
 

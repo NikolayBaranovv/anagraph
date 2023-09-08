@@ -3,7 +3,7 @@ import { noop } from "ts-essentials";
 import { useCallbackList } from "./useCallbackList";
 
 type FPSHandler = (fps: number) => void;
-type SetCounter = (handle: Object, fps: number) => void;
+type SetCounter = (fps: number) => void;
 
 interface FPSContextType {
     addFPSHandler(callback: FPSHandler): void;
@@ -23,10 +23,8 @@ interface FPSManagerProps {
 export function FPSManager(props: FPSManagerProps) {
     const { addCallback: addFPSHandler, callCallbacks } = useCallbackList<FPSHandler>();
 
-    const counters = useRef(new WeakMap<Object, number>());
     const maxCounter = useRef(0);
-    const setCounter = useCallback((handle: Object, fps: number) => {
-        counters.current.set(handle, fps);
+    const setCounter = useCallback((fps: number) => {
         if (fps > maxCounter.current) {
             maxCounter.current = fps;
         }
@@ -36,7 +34,6 @@ export function FPSManager(props: FPSManagerProps) {
 
     useEffect(() => {
         const int = window.setInterval(() => {
-            counters.current = new WeakMap();
             const fps = (maxCounter.current / intervalMs) * 1e3;
             maxCounter.current = 0;
             callCallbacks(fps);
