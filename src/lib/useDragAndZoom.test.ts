@@ -1,4 +1,5 @@
-import { Bounds, fitBoundsInLimit } from "./useDragAndZoom";
+import { fitBoundsInLimit } from "./useDragAndZoom";
+import { Bounds } from "./drawing-types";
 
 describe("fitBoundsInLimit", () => {
     it("returns incoming bounds if the limit is null", () => {

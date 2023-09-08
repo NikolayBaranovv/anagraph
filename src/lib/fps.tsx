@@ -3,17 +3,17 @@ import { noop } from "ts-essentials";
 import { useCallbackList } from "./useCallbackList";
 
 type FPSHandler = (fps: number) => void;
-type IncCounter = (canvas: CanvasRenderingContext2D) => void;
+type SetCounter = (handle: Object, fps: number) => void;
 
 interface FPSContextType {
     addFPSHandler(callback: FPSHandler): void;
 
-    incCounter: IncCounter;
+    setCounter: SetCounter;
 }
 
 const FPSContext = createContext<FPSContextType>({
     addFPSHandler: noop,
-    incCounter: noop,
+    setCounter: noop,
 });
 
 interface FPSManagerProps {
@@ -23,13 +23,12 @@ interface FPSManagerProps {
 export function FPSManager(props: FPSManagerProps) {
     const { addCallback: addFPSHandler, callCallbacks } = useCallbackList<FPSHandler>();
 
-    const counters = useRef(new WeakMap<CanvasRenderingContext2D, number>());
+    const counters = useRef(new WeakMap<Object, number>());
     const maxCounter = useRef(0);
-    const incCounter = useCallback((canvas: CanvasRenderingContext2D) => {
-        const newValue = (counters.current.get(canvas) ?? 0) + 1;
-        counters.current.set(canvas, newValue);
-        if (newValue > maxCounter.current) {
-            maxCounter.current = newValue;
+    const setCounter = useCallback((handle: Object, fps: number) => {
+        counters.current.set(handle, fps);
+        if (fps > maxCounter.current) {
+            maxCounter.current = fps;
         }
     }, []);
 
@@ -45,7 +44,7 @@ export function FPSManager(props: FPSManagerProps) {
         return () => window.clearInterval(int);
     }, [callCallbacks]);
 
-    const context: FPSContextType = useMemo(() => ({ addFPSHandler, incCounter }), [addFPSHandler, incCounter]);
+    const context: FPSContextType = useMemo(() => ({ addFPSHandler, setCounter }), [addFPSHandler, setCounter]);
 
     return <FPSContext.Provider value={context}>{props.children}</FPSContext.Provider>;
 }
@@ -57,7 +56,7 @@ export function FPSIndicator() {
     useEffect(() => {
         fpsContext?.addFPSHandler((fps) => {
             if (div.current) {
-                div.current.innerText = `FPS: ${fps}`;
+                div.current.innerText = `FPS: ${fps.toFixed(1)}`;
             }
         });
     });
@@ -79,6 +78,6 @@ export function FPSIndicator() {
     );
 }
 
-export function useIncFPSCounter(): IncCounter {
-    return useContext(FPSContext).incCounter;
+export function useSetFPSCounter(): SetCounter {
+    return useContext(FPSContext).setCounter;
 }

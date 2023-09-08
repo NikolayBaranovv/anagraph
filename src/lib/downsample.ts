@@ -1,4 +1,4 @@
-import { Bounds } from "./useDragAndZoom";
+import { Bounds } from "./drawing-types";
 
 type ArrayWithFirstTyped<V> = [V, ...any[]];
 

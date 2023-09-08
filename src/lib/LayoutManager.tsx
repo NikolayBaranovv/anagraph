@@ -1,13 +1,13 @@
 import { createContext, ReactElement, ReactNode, useContext, useMemo } from "react";
-import { Rect } from "./utils";
 import { useCanvasContext } from "./Canvas";
+import { Rect } from "./drawing-types";
 
 // cpx -- canvas pixels (physical device pixels)
 // lpx -- logical pixels (css px)
 
 // Xcpx = Xlpx * window.devicePixelRatio
 
-interface LabelSettings {
+export interface LabelSettings {
     textColor: string;
     bulletRadius: number;
     fontFamily: string;
@@ -48,7 +48,10 @@ interface LayoutManagerProps extends Partial<Layout> {
     children: ReactNode | ReactNode[];
 }
 export function LayoutManager(props: LayoutManagerProps): ReactElement {
-    const value = useMemo(() => ({ ...defaultLayout, ...props }), [props]);
+    const value = useMemo(
+        () => ({ ...defaultLayout, ...props }),
+        [props.bottomLabelsHeight, props.leftLabelsWidth, props.topGap, props.labelsSettings],
+    );
     return <LayoutContext.Provider value={value}>{props.children}</LayoutContext.Provider>;
 }
 
@@ -65,7 +68,7 @@ export function useGridRectCpx(): Rect {
             width: canvasSizeCpx.width - layout.leftLabelsWidth * dpr,
             height: canvasSizeCpx.height - layout.bottomLabelsHeight * dpr - layout.topGap * dpr,
         }),
-        [layout, canvasSizeCpx, dpr]
+        [layout, canvasSizeCpx, dpr],
     );
 }
 
@@ -82,7 +85,7 @@ export function useGridRectLpx(): Rect {
             width: canvasSizeCpx.width / dpr - layout.leftLabelsWidth,
             height: canvasSizeCpx.height / dpr - layout.bottomLabelsHeight - layout.topGap,
         }),
-        [layout, canvasSizeCpx, dpr]
+        [layout, canvasSizeCpx, dpr],
     );
 }
 

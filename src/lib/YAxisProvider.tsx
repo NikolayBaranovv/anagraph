@@ -1,5 +1,6 @@
 import { createContext, ReactElement, ReactNode, useContext, useMemo } from "react";
-import { Bounds } from "./useDragAndZoom";
+
+import { Bounds } from "./drawing-types";
 
 interface YAxisContextType {
     bounds: Bounds;
@@ -20,7 +21,7 @@ export function YAxisProvider(props: YAxisProviderProps): ReactElement {
         () => ({
             bounds: props.bounds,
         }),
-        [props.bounds[0], props.bounds[1]]
+        [props.bounds[0], props.bounds[1]],
     );
 
     return <YAxisContext.Provider value={context}>{props.children}</YAxisContext.Provider>;

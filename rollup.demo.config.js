@@ -27,4 +27,20 @@ export default [
             process.env.LIVE && livereload("demo"),
         ],
     },
+    {
+        input: "src/lib/worker.ts",
+        output: {
+            dir: "demo",
+            format: "esm",
+        },
+        plugins: [
+            peerDepsExternal(),
+            replace({
+                "process.env.NODE_ENV": '"production"',
+            }),
+            resolve(),
+            commonjs(),
+            typescript({ tsconfig: "./tsconfig.json" }),
+        ],
+    },
 ];

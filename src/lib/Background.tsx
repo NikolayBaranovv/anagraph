@@ -1,19 +1,14 @@
-import { useCallback } from "react";
-import { useCanvasContext, useDrawCallback } from "./Canvas";
+import { useMemo } from "react";
+import { useCanvasContext, useDrawingInstruction } from "./Canvas";
+import { clearBackgroundInstruction } from "./drawing-types";
 
 export const Background = function Background() {
     const {
         canvasSizeCpx: { width, height },
     } = useCanvasContext();
 
-    const drawer = useCallback(
-        function drawBackground(ctx: CanvasRenderingContext2D) {
-            ctx.clearRect(0, 0, width, height);
-        },
-        [width, height],
-    );
-
-    useDrawCallback(drawer);
+    const instruction = useMemo(() => clearBackgroundInstruction(width, height), [width, height]);
+    useDrawingInstruction(instruction);
 
     return null;
 };

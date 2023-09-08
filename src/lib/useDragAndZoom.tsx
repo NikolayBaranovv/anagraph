@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { noop, SafeDictionary } from "ts-essentials";
+import { Bounds } from "./drawing-types";
 
 interface TouchDetails {
     originX: number;
@@ -11,8 +12,6 @@ function iterateTouchList(touchList: TouchList, iterator: (touch: Touch) => void
         iterator(touchList[i]);
     }
 }
-
-export type Bounds = Readonly<[number, number]>;
 
 const wheelZoomFactor = 1.5;
 

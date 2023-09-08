@@ -9,3 +9,5 @@ export { Manipulator } from "./Manipulator";
 export { TimeXLegend } from "./TimeXLegend";
 export { YLegend } from "./YLegend";
 export { YAxisProvider } from "./YAxisProvider";
+export { WorkerUrlProvider } from "./WorkerUrlContext";
+export type { Bounds, Rect } from "./drawing-types";

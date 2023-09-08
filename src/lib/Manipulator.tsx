@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useBoundsContext } from "./BoundsManager";
-import { Bounds, useDragAndZoom } from "./useDragAndZoom";
+import { useDragAndZoom } from "./useDragAndZoom";
 import { useGridRectLpx } from "./LayoutManager";
+import { Bounds } from "./drawing-types";
 
 export interface ManipulatorProps {
     boundsLimit?: Bounds;

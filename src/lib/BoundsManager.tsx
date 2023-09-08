@@ -9,8 +9,8 @@ import React, {
     useState,
 } from "react";
 import { noop } from "ts-essentials";
-import { Bounds } from "./useDragAndZoom";
 import { useCallbackList } from "./useCallbackList";
+import { Bounds } from "./drawing-types";
 
 type BoundsHandler = (xBounds: Bounds) => void;
 
@@ -64,7 +64,7 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
             tmpXBounds.current = bounds;
             callXBoundsCallbacks(bounds);
         },
-        [callXBoundsCallbacks]
+        [callXBoundsCallbacks],
     );
     const onManipulationEnd = useCallback(
         (bounds: Bounds) => {
@@ -73,7 +73,7 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
             setFinalXBounds(bounds);
             callXBoundsCallbacks(bounds);
         },
-        [setFinalXBounds, callXBoundsCallbacks]
+        [setFinalXBounds, callXBoundsCallbacks],
     );
 
     const contextValue: BoundsContextType = {

@@ -1,10 +1,8 @@
-import { Bounds } from "./useDragAndZoom";
+import { Bounds, GraphData } from "./drawing-types";
 
 export function scale(value: number, oldBounds: Bounds, newBounds: Bounds): number {
     return ((value - oldBounds[0]) / (oldBounds[1] - oldBounds[0])) * (newBounds[1] - newBounds[0]) + newBounds[0];
 }
-
-export type GraphData = [number, number][];
 
 export function generateRandomData([minx, maxx]: Bounds, [miny, maxy]: Bounds, n: number, index: number): GraphData {
     const data = new Array(n);
@@ -15,18 +13,6 @@ export function generateRandomData([minx, maxx]: Bounds, [miny, maxy]: Bounds, n
     }
     return data;
 }
-
-export interface Size {
-    width: number;
-    height: number;
-}
-
-export interface Offset {
-    x: number;
-    y: number;
-}
-
-export type Rect = Offset & Size;
 
 const log10_5 = Math.log10(5);
 const log10_4 = Math.log10(4);
@@ -215,4 +201,8 @@ export function* generateTimeTicks(range: Bounds, pixels: number, minSize: numbe
             d.setTime(v + step);
         }
     } while (v < range[1] && v !== prev);
+}
+
+export function assertNever(value: never): never {
+    throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
 }
