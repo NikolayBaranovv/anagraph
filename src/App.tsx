@@ -11,7 +11,7 @@ import {
     Line,
     Manipulator,
     TimeXLegend,
-    WorkerUrlProvider,
+    WorkerCreatorProvider,
     YAxisProvider,
     YLegend,
 } from "./lib";
@@ -30,7 +30,7 @@ const graphData2 = new Array(nGraphs).fill(0).map((_, index) => generateRandomDa
 function App() {
     return (
         <FPSManager>
-            <WorkerUrlProvider workerUrl="./worker.js">
+            <WorkerCreatorProvider workerCreator={() => new Worker("./worker.js")}>
                 <LayoutManager>
                     <BoundsManager initialXBounds={xBounds}>
                         <YAxisProvider bounds={yBounds}>
@@ -59,7 +59,7 @@ function App() {
                         </YAxisProvider>
                     </BoundsManager>
                 </LayoutManager>
-            </WorkerUrlProvider>
+            </WorkerCreatorProvider>
         </FPSManager>
     );
 }

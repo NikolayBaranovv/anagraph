@@ -16,7 +16,7 @@ import { useSetFPSCounter } from "./fps";
 
 import { DrawingInstruction, Size } from "./drawing-types";
 import { useLatest } from "react-use";
-import { useWorkerUrl } from "./WorkerUrlContext";
+import { useWorkerCreator } from "./WorkerCreatorContext";
 import {
     setCanvasMessage,
     setCanvasSizeMessage,
@@ -70,17 +70,14 @@ export function Canvas(props: CanvasProps): ReactElement {
         return () => sizeObserver.unobserve(canvas);
     }, [canvas, sizeObserver]);
 
-    // const ctx: CanvasRenderingContext2D | null = useMemo(() => canvas?.getContext("2d") ?? null, [canvas]);
-
-    // const worker = useRef<Workerized<typeof WorkerType> | null>(null);
     const [worker, setWorker] = useState<Worker | null>(null);
 
-    const workerUrl = useWorkerUrl();
+    const workerCreator = useWorkerCreator();
 
     useEffect(() => {
         if (canvas == null) return;
 
-        const wrk = new Worker(workerUrl);
+        const wrk = workerCreator();
         const offscreenCanvas = canvas.transferControlToOffscreen();
         wrk.postMessage(setCanvasMessage(offscreenCanvas, window.devicePixelRatio), [offscreenCanvas]);
         setWorker(wrk);
