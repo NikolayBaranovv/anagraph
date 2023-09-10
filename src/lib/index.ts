@@ -11,3 +11,4 @@ export { YLegend } from "./YLegend";
 export { YAxisProvider } from "./YAxisProvider";
 export { WorkerCreatorProvider } from "./WorkerCreatorContext";
 export type { Bounds, Rect } from "./drawing-types";
+export { startAnagraphWorker } from "./worker";

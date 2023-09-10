@@ -28,7 +28,7 @@ export default [
         ],
     },
     {
-        input: "src/lib/worker.ts",
+        input: "src/worker.ts",
         output: {
             dir: "demo",
             format: "esm",

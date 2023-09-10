@@ -25,14 +25,14 @@ export default [
         plugins: [peerDepsExternal(), resolve(), commonjs(), typescript({ tsconfig: "./tsconfig.json" }), terser()],
         external: ["react", "react-dom"],
     },
-    {
-        input: "src/lib/worker.ts",
-        output: [
-            { file: "dist/worker.js", format: "cjs", sourcemap: true },
-            { file: "dist/worker.esm.js", format: "esm", sourcemap: true },
-        ],
-        plugins: [peerDepsExternal(), resolve(), commonjs(), typescript({ tsconfig: "./tsconfig.json" }), terser()],
-    },
+    // {
+    //     input: "src/lib/worker.ts",
+    //     output: [
+    //         { file: "dist/worker.js", format: "cjs", sourcemap: true },
+    //         { file: "dist/worker.esm.js", format: "esm", sourcemap: true },
+    //     ],
+    //     plugins: [peerDepsExternal(), resolve(), commonjs(), typescript({ tsconfig: "./tsconfig.json" }), terser()],
+    // },
     {
         input: "src/lib/index.ts",
         output: [{ file: "dist/anagraph.d.ts", format: "es" }],

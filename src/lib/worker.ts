@@ -220,42 +220,44 @@ function setXBoundsAndRedraw(xBounds_: Bounds) {
     }
 }
 
-setInterval(() => {
-    const now = new Date().getTime();
-    const fps = (framesDrawn / (now - lastTimerTime)) * 1e3;
-    lastTimerTime = now;
-    framesDrawn = 0;
-    postMessage(statsReportMessage(fps));
-}, 1e3);
+export function startAnagraphWorker() {
+    setInterval(() => {
+        const now = new Date().getTime();
+        const fps = (framesDrawn / (now - lastTimerTime)) * 1e3;
+        lastTimerTime = now;
+        framesDrawn = 0;
+        postMessage(statsReportMessage(fps));
+    }, 1e3);
 
-addEventListener("message", (msg: MessageEvent<MainToWorkerMessage>) => {
-    const type = msg.data.type;
+    addEventListener("message", (msg: MessageEvent<MainToWorkerMessage>) => {
+        const type = msg.data.type;
 
-    switch (msg.data.type) {
-        case "setCanvas": {
-            canvas = msg.data.canvas;
-            ctx = canvas?.getContext("2d", { desynchronized: true }) ?? null;
-            devicePixelRatio = msg.data.devicePixelRatio;
-            break;
+        switch (msg.data.type) {
+            case "setCanvas": {
+                canvas = msg.data.canvas;
+                ctx = canvas?.getContext("2d", { desynchronized: true }) ?? null;
+                devicePixelRatio = msg.data.devicePixelRatio;
+                break;
+            }
+
+            case "setCanvasSize": {
+                setCanvasSize(msg.data.width, msg.data.height);
+                break;
+            }
+
+            case "setInstructions": {
+                setInstructions(msg.data.instructions);
+                break;
+            }
+
+            case "setXBoundsAndRedraw": {
+                setXBoundsAndRedraw(msg.data.xBounds);
+                break;
+            }
+
+            default: {
+                assertNever(msg.data);
+            }
         }
-
-        case "setCanvasSize": {
-            setCanvasSize(msg.data.width, msg.data.height);
-            break;
-        }
-
-        case "setInstructions": {
-            setInstructions(msg.data.instructions);
-            break;
-        }
-
-        case "setXBoundsAndRedraw": {
-            setXBoundsAndRedraw(msg.data.xBounds);
-            break;
-        }
-
-        default: {
-            assertNever(msg.data);
-        }
-    }
-});
+    });
+}
