@@ -40,7 +40,7 @@ function App() {
                                 <Background />
                                 <Grid />
                                 {graphData1.map((graphData, i) => (
-                                    <Line data={graphData} key={i} color="#c4443b" />
+                                    <Line data={graphData} key={i} color="#c4443b" lineWidth={2} />
                                 ))}
                                 <TimeXLegend />
                                 <YLegend />
@@ -51,7 +51,7 @@ function App() {
                                 <Background />
                                 <Grid />
                                 {graphData2.map((graphData, i) => (
-                                    <Line data={graphData} key={i} color="#3993DD" />
+                                    <Line data={graphData} key={i} color="#3993DD" lineWidth={2} />
                                 ))}
                                 <TimeXLegend />
                                 <YLegend />

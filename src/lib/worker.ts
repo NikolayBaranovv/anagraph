@@ -51,8 +51,13 @@ function drawLatestInstructions() {
         ctx.save();
         switch (instruction.type) {
             case "clearBackground": {
-                const { width, height } = instruction;
-                ctx.clearRect(0, 0, width, height);
+                const { width, height, color } = instruction;
+                if (color == null) {
+                    ctx.clearRect(0, 0, width, height);
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(0, 0, width, height);
+                }
                 break;
             }
 
@@ -85,7 +90,9 @@ function drawLatestInstructions() {
                 const { labelSettings, yBounds, gridRect } = instruction;
 
                 ctx.fillStyle = labelSettings.textColor;
-                ctx.font = `${labelSettings.fontSize * devicePixelRatio}px ${labelSettings.fontFamily}`;
+                ctx.font = `${labelSettings.fontStyle} ${labelSettings.fontSize * devicePixelRatio}px ${
+                    labelSettings.fontFamily
+                }`;
                 ctx.textAlign = "right";
                 ctx.textBaseline = "middle";
 
@@ -111,7 +118,9 @@ function drawLatestInstructions() {
 
                 ctx.fillStyle = labelSettings.textColor;
                 ctx.textBaseline = "top";
-                ctx.font = `${labelSettings.fontSize * devicePixelRatio}px ${labelSettings.fontFamily}`;
+                ctx.font = `${labelSettings.fontStyle} ${labelSettings.fontSize * devicePixelRatio}px ${
+                    labelSettings.fontFamily
+                }`;
 
                 const sampleSize = ctx.measureText("00:00");
 
@@ -150,6 +159,7 @@ function drawLatestInstructions() {
                     color,
                     gridRect,
                     yBounds: [yMin, yMax],
+                    lineWidth,
                 } = instruction;
 
                 const downsampled_B = visualDownsample_B(points, xBounds, gridRect.width);
@@ -158,7 +168,7 @@ function drawLatestInstructions() {
 
                 if (downX.length === 0) break;
 
-                ctx.lineWidth = 2 * devicePixelRatio;
+                ctx.lineWidth = lineWidth * devicePixelRatio;
                 ctx.lineCap = "square";
                 ctx.lineJoin = "bevel";
                 ctx.strokeStyle = color;

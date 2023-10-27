@@ -27,10 +27,15 @@ interface ClearBackgroundInstruction {
     type: "clearBackground";
     width: number;
     height: number;
+    color: string | null;
 }
 
-export function clearBackgroundInstruction(width: number, height: number): ClearBackgroundInstruction {
-    return { type: "clearBackground", width, height };
+export function clearBackgroundInstruction(
+    width: number,
+    height: number,
+    color: string | null,
+): ClearBackgroundInstruction {
+    return { type: "clearBackground", width, height, color };
 }
 
 interface DrawLineInstruction {
@@ -39,6 +44,7 @@ interface DrawLineInstruction {
     color: string;
     gridRect: Rect;
     yBounds: Bounds;
+    lineWidth: number;
 }
 
 export function drawLineInstruction(
@@ -46,8 +52,9 @@ export function drawLineInstruction(
     color: string,
     gridRect: Rect,
     yBounds: Bounds,
+    lineWidth: number,
 ): DrawLineInstruction {
-    return { type: "drawLine", points, color, gridRect, yBounds };
+    return { type: "drawLine", points, color, gridRect, yBounds, lineWidth };
 }
 
 interface DrawGridInstruction {

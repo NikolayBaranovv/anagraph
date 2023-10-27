@@ -11,6 +11,7 @@ export interface LabelSettings {
     textColor: string;
     bulletRadius: number;
     fontFamily: string;
+    fontStyle: string;
     fontSize: number;
     xLabelsGap: number;
     yLabelsGap: number;
@@ -36,6 +37,7 @@ const defaultLayout: Layout = {
         textColor: "#666699",
         bulletRadius: 3,
         fontFamily: "sans-serif",
+        fontStyle: "normal",
         fontSize: 16,
         xLabelsGap: 3,
         yLabelsGap: 8,
