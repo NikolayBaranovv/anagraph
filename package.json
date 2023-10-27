@@ -68,6 +68,7 @@
     "@types/offscreencanvas": "^2019.7.0",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "acorn": "^8.11.2",
     "babel-jest": "^29.6.1",
     "eslint": "^8.52.0",
     "eslint-plugin-storybook": "^0.6.15",
