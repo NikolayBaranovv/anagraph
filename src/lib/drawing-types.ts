@@ -23,7 +23,7 @@ export type DrawingInstruction =
     | DrawYLegendInstruction
     | DrawTimeXLegendInstruction;
 
-interface ClearBackgroundInstruction {
+export interface ClearBackgroundInstruction {
     type: "clearBackground";
     width: number;
     height: number;
@@ -38,7 +38,7 @@ export function clearBackgroundInstruction(
     return { type: "clearBackground", width, height, color };
 }
 
-interface DrawLineInstruction {
+export interface DrawLineInstruction {
     type: "drawLine";
     points: GraphData;
     color: string;
@@ -57,7 +57,7 @@ export function drawLineInstruction(
     return { type: "drawLine", points, color, gridRect, yBounds, lineWidth };
 }
 
-interface DrawGridInstruction {
+export interface DrawGridInstruction {
     type: "drawGrid";
     color: string;
     lineWidth: number;
@@ -74,7 +74,7 @@ export function drawGridInstruction(
     return { type: "drawGrid", color, lineWidth, gridRect, yBounds };
 }
 
-interface DrawYLegendInstruction {
+export interface DrawYLegendInstruction {
     type: "drawYLegend";
     labelSettings: LabelSettings;
     gridRect: Rect;
@@ -89,7 +89,7 @@ export function drawYLegendInstruction(
     return { type: "drawYLegend", labelSettings, gridRect, yBounds };
 }
 
-interface DrawTimeXLegendInstruction {
+export interface DrawTimeXLegendInstruction {
     type: "drawTimeXLegend";
     labelSettings: LabelSettings;
     gridRect: Rect;
