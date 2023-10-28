@@ -1,5 +1,5 @@
 import { Bounds, DrawLineInstruction } from "../../drawing-types";
-import { visualDownsample, visualDownsample_B } from "../../downsample";
+import { visualDownsample } from "../../downsample";
 
 export function doDrawLine(
     instruction: DrawLineInstruction,
@@ -15,10 +15,7 @@ export function doDrawLine(
         lineWidth,
     } = instruction;
 
-    const downsampled_B = visualDownsample_B(points, xBounds, gridRect.width);
-
-    const downX = downsampled_B[0],
-        downY = downsampled_B[1];
+    const [downX, downY] = visualDownsample(points, xBounds, gridRect.width);
 
     if (downX.length === 0) return;
 
@@ -31,7 +28,7 @@ export function doDrawLine(
     clipPath.rect(gridRect.x, gridRect.y, gridRect.width, gridRect.height);
     ctx.clip(clipPath);
 
-    const { 0: xMin, 1: xMax } = xBounds;
+    const [xMin, xMax] = xBounds;
     const { x: gridRectX, y: gridRectY, width: gridRectWidth, height: gridRectHeight } = gridRect;
     const gridBottom = gridRectY + gridRectHeight;
     const gridWidthDivXBounds = gridRectWidth / (xMax - xMin);
