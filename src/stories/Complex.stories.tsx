@@ -39,11 +39,11 @@ export const Z52467: Story = {
                     <Manipulator boundsLimit={complexLinesData.viewport} />
                     <Background />
                     <Grid />
+                   {complexLinesData.markings.map((marking: any, i: number) => (
+                        <VerticalFilling key={i} intervals={marking.data} color={marking.color} />
+                    ))}
                     {complexLinesData.lines.map((data: any, i: number) => (
                         <Line key={i} color={data.color} data={data.data} lineWidth={2} />
-                    ))}
-                    {complexLinesData.markings.map((marking: any, i: number) => (
-                        <VerticalFilling key={i} intervals={marking.data} color={marking.color} />
                     ))}
                     <TimeXLegend />
                     <YLegend />
