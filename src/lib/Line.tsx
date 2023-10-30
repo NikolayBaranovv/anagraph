@@ -10,7 +10,7 @@ interface LineProps {
     lineWidth: number;
 }
 
-export const Line = function Line(props: LineProps) {
+export function Line(props: LineProps) {
     const { data, color, lineWidth } = props;
     const { bounds: yBounds } = useYAxisContext();
 
@@ -23,4 +23,4 @@ export const Line = function Line(props: LineProps) {
     useDrawingInstruction(instruction);
 
     return null;
-};
+}

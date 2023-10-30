@@ -5,6 +5,7 @@ import { doDrawYLegend } from "./doDrawYLegend";
 import { doDrawTimeXLegend } from "./doDrawTimeXLegend";
 import { doDrawLine } from "./doDrawLine";
 import { assertNever } from "../../utils";
+import { doDrawVerticalFilling } from "./doDrawVerticalFilling";
 
 export function drawInstruction(
     instruction: DrawingInstruction,
@@ -36,6 +37,11 @@ export function drawInstruction(
 
         case "drawLine": {
             doDrawLine(instruction, ctx, xBounds, devicePixelRatio);
+            break;
+        }
+
+        case "drawVerticalFilling": {
+            doDrawVerticalFilling(instruction, ctx, xBounds);
             break;
         }
 

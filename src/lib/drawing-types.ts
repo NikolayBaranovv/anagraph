@@ -19,6 +19,7 @@ export type Rect = Offset & Size;
 export type DrawingInstruction =
     | ClearBackgroundInstruction
     | DrawLineInstruction
+    | DrawVerticalFillingInstruction
     | DrawGridInstruction
     | DrawYLegendInstruction
     | DrawTimeXLegendInstruction;
@@ -55,6 +56,21 @@ export function drawLineInstruction(
     lineWidth: number,
 ): DrawLineInstruction {
     return { type: "drawLine", points, color, gridRect, yBounds, lineWidth };
+}
+
+export interface DrawVerticalFillingInstruction {
+    type: "drawVerticalFilling";
+    intervals: Bounds[];
+    color: string;
+    gridRect: Rect;
+}
+
+export function drawVerticalFillingInstruction(
+    intervals: Bounds[],
+    color: string,
+    gridRect: Rect,
+): DrawVerticalFillingInstruction {
+    return { type: "drawVerticalFilling", intervals, color, gridRect };
 }
 
 export interface DrawGridInstruction {
