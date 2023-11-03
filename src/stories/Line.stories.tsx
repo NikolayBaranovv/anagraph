@@ -5,11 +5,12 @@ import {
     Canvas,
     FPSIndicator,
     FPSManager,
-    Grid,
     Line,
     Manipulator,
+    TimeXGrid,
     TimeXLegend,
     YAxisProvider,
+    YGrid,
     YLegend,
 } from "../lib";
 import { monthXBounds, randomDataForMonth, yBounds100 } from "./stories-constants";
@@ -49,7 +50,8 @@ export const MonthOfData: Story = {
                 <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0" }}>
                     <Manipulator boundsLimit={monthXBounds} />
                     <Background />
-                    <Grid />
+                    <TimeXGrid />
+                    <YGrid />
                     <Line {...args} />
                     <TimeXLegend />
                     <YLegend />

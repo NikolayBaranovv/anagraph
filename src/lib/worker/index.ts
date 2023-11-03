@@ -1,6 +1,6 @@
 import type { Bounds, DrawingInstruction } from "../drawing-types";
 import { assertNever } from "../utils";
-import { MainToWorkerMessage, statsReportMessage } from "../worker-messages";
+import { MainToWorkerMessage, statsReportMessage } from "./worker-messages";
 import { drawInstruction } from "./drawers";
 
 let devicePixelRatio = 1;

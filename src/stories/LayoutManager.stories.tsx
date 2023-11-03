@@ -3,12 +3,13 @@ import {
     Background,
     BoundsManager,
     Canvas,
-    Grid,
     LayoutManager,
     Line,
     Manipulator,
+    TimeXGrid,
     TimeXLegend,
     YAxisProvider,
+    YGrid,
     YLegend,
 } from "../lib";
 import { monthXBounds, randomDataForMonth, yBounds100 } from "./stories-constants";
@@ -43,7 +44,8 @@ export const LayoutManagerStory: Story = {
                     <Canvas style={{ outline: "1px solid gray" }}>
                         <Manipulator />
                         <Background />
-                        <Grid />
+                        <TimeXGrid />
+                        <YGrid />
                         <Line color="#c4443b" lineWidth={2} data={randomDataForMonth} />
                         <TimeXLegend />
                         <YLegend />

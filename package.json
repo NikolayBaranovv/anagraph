@@ -17,7 +17,6 @@
     "react-use": "^17.4.0"
   },
   "scripts": {
-    "start": "rollup -c rollup.demo.config.js --bundleConfigAsCjs --watch --environment LIVE",
     "build": "rollup -c rollup.lib.config.js --bundleConfigAsCjs",
     "test": "jest",
     "build-and-publish": "rm -rf dist && npm run build && npm publish",

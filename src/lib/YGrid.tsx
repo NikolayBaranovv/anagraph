@@ -2,14 +2,14 @@ import { useMemo } from "react";
 import { useDrawingInstruction } from "./Canvas";
 import { useGridRectCpx } from "./LayoutManager";
 import { useYAxisContext } from "./YAxisProvider";
-import { drawGridInstruction } from "./drawing-types";
+import { drawYGridInstruction } from "./drawing-types";
 
-interface GridProps {
+interface YGridProps {
     color?: string;
     lineWidth?: number;
 }
 
-export function Grid(props: GridProps) {
+export function YGrid(props: YGridProps) {
     const { color = "#ccc", lineWidth = 1 } = props;
 
     const { bounds: yBounds } = useYAxisContext();
@@ -17,7 +17,7 @@ export function Grid(props: GridProps) {
     const gridRect = useGridRectCpx();
 
     const instruction = useMemo(
-        () => drawGridInstruction(color, lineWidth, gridRect, yBounds),
+        () => drawYGridInstruction(color, lineWidth, gridRect, yBounds),
         [color, lineWidth, gridRect, yBounds],
     );
     useDrawingInstruction(instruction);

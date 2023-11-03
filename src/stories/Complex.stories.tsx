@@ -6,14 +6,15 @@ import {
     Canvas,
     FPSIndicator,
     FPSManager,
-    Grid,
     Line,
     Manipulator,
+    TimeXGrid,
     TimeXLegend,
+    VerticalFilling,
     YAxisProvider,
+    YGrid,
     YLegend,
 } from "../lib";
-import { VerticalFilling } from "../lib/VerticalFilling";
 
 export default {
     title: "Anagraph/Complex Examples",
@@ -38,8 +39,9 @@ export const Z52467: Story = {
                 <Canvas style={{ height: "450px", outline: "1px solid #c0c0c0" }}>
                     <Manipulator boundsLimit={complexLinesData.viewport} />
                     <Background />
-                    <Grid />
-                   {complexLinesData.markings.map((marking: any, i: number) => (
+                    <TimeXGrid />
+                    <YGrid />
+                    {complexLinesData.markings.map((marking: any, i: number) => (
                         <VerticalFilling key={i} intervals={marking.data} color={marking.color} />
                     ))}
                     {complexLinesData.lines.map((data: any, i: number) => (

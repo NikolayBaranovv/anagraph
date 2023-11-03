@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Background, BoundsManager, Canvas, Grid, Manipulator, TimeXLegend, YAxisProvider } from "../lib";
+import { Background, BoundsManager, Canvas, Manipulator, TimeXGrid, TimeXLegend, YAxisProvider } from "../lib";
 import { yBounds100, yearXBounds } from "./stories-constants";
 
 export default {
@@ -12,7 +12,7 @@ export default {
                     <Canvas>
                         <Manipulator />
                         <Background />
-                        <Grid />
+                        <TimeXGrid />
                         <Story />
                     </Canvas>
                 </YAxisProvider>

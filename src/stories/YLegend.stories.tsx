@@ -1,16 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import {
-    Background,
-    Bounds,
-    BoundsManager,
-    Canvas,
-    Grid,
-    Manipulator,
-    WorkerCreatorProvider,
-    YAxisProvider,
-    YLegend,
-} from "../lib";
-import AnagraphWorker from "./storybook-worker";
+import { Background, BoundsManager, Canvas, Manipulator, TimeXGrid, YAxisProvider, YGrid, YLegend } from "../lib";
 import { yBounds100, yearXBounds } from "./stories-constants";
 
 export default {
@@ -23,7 +12,8 @@ export default {
                     <Canvas>
                         <Manipulator />
                         <Background />
-                        <Grid />
+                        <YGrid />
+                        <TimeXGrid />
                         <Story />
                     </Canvas>
                 </YAxisProvider>

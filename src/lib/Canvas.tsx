@@ -23,7 +23,7 @@ import {
     setInstructionsMessage,
     setXBoundsAndRedrawMessage,
     WorkerToMainMessage,
-} from "./worker-messages";
+} from "./worker/worker-messages";
 import { assertNever } from "./utils";
 
 interface CanvasContextType {

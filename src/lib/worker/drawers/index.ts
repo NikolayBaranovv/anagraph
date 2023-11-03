@@ -1,11 +1,12 @@
 import { Bounds, DrawingInstruction } from "../../drawing-types";
 import { doClearBackground } from "./doClearBackground";
-import { doDrawGrid } from "./doDrawGrid";
+import { doDrawYGrid } from "./doDrawYGrid";
 import { doDrawYLegend } from "./doDrawYLegend";
 import { doDrawTimeXLegend } from "./doDrawTimeXLegend";
 import { doDrawLine } from "./doDrawLine";
 import { assertNever } from "../../utils";
 import { doDrawVerticalFilling } from "./doDrawVerticalFilling";
+import { doDrawTimeXGrid } from "./doDrawTimeXGrid";
 
 export function drawInstruction(
     instruction: DrawingInstruction,
@@ -20,8 +21,13 @@ export function drawInstruction(
             break;
         }
 
-        case "drawGrid": {
-            doDrawGrid(instruction, ctx, xBounds);
+        case "drawTimeXGrid": {
+            doDrawTimeXGrid(instruction, ctx, xBounds, devicePixelRatio);
+            break;
+        }
+
+        case "drawYGrid": {
+            doDrawYGrid(instruction, ctx, xBounds);
             break;
         }
 

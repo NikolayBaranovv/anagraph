@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Background, BoundsManager, Canvas, Grid, Manipulator, TimeXLegend, YAxisProvider, YLegend } from "../lib";
+import { Background, BoundsManager, Canvas, Manipulator, YAxisProvider, YGrid, YLegend } from "../lib";
 import { yBounds100, yearXBounds } from "./stories-constants";
 
 export default {
-    title: "Anagraph/Grid",
-    component: Grid,
+    title: "Anagraph/YGrid",
+    component: YGrid,
     decorators: [
         (Story) => (
             <BoundsManager initialXBounds={yearXBounds}>
@@ -13,18 +13,17 @@ export default {
                         <Manipulator />
                         <Background />
                         <Story />
-                        <TimeXLegend />
                         <YLegend />
                     </Canvas>
                 </YAxisProvider>
             </BoundsManager>
         ),
     ],
-} satisfies Meta<typeof Grid>;
+} satisfies Meta<typeof YGrid>;
 
-type Story = StoryObj<typeof Grid>;
+type Story = StoryObj<typeof YGrid>;
 
-export const TimeGrid: Story = {
+export const Simple: Story = {
     args: {
         color: "#ccc",
         lineWidth: 1,

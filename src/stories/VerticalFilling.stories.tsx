@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { VerticalFilling } from "../lib/VerticalFilling";
-import { Background, BoundsManager, Canvas, Grid, Manipulator, TimeXLegend, YAxisProvider, YLegend } from "../lib";
+import { Background, BoundsManager, Canvas, Manipulator, TimeXGrid, TimeXLegend, VerticalFilling } from "../lib";
 
 export default {
     title: "Anagraph/VerticalFilling",
@@ -8,16 +7,13 @@ export default {
     decorators: [
         (Story) => (
             <BoundsManager initialXBounds={[ts(2022, 11, 31, 12), ts(2023, 0, 6, 12)]}>
-                <YAxisProvider bounds={[0, 100]}>
-                    <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0" }}>
-                        <Manipulator />
-                        <Background />
-                        <Grid />
-                        <Story />
-                        <TimeXLegend />
-                        <YLegend />
-                    </Canvas>
-                </YAxisProvider>
+                <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0" }}>
+                    <Manipulator />
+                    <Background />
+                    <TimeXGrid />
+                    <Story />
+                    <TimeXLegend />
+                </Canvas>
             </BoundsManager>
         ),
     ],

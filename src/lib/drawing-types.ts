@@ -20,7 +20,8 @@ export type DrawingInstruction =
     | ClearBackgroundInstruction
     | DrawLineInstruction
     | DrawVerticalFillingInstruction
-    | DrawGridInstruction
+    | DrawXGridInstruction
+    | DrawYGridInstruction
     | DrawYLegendInstruction
     | DrawTimeXLegendInstruction;
 
@@ -73,21 +74,38 @@ export function drawVerticalFillingInstruction(
     return { type: "drawVerticalFilling", intervals, color, gridRect };
 }
 
-export interface DrawGridInstruction {
-    type: "drawGrid";
+export interface DrawXGridInstruction {
+    type: "drawTimeXGrid";
+    color: string;
+    lineWidth: number;
+    gridRect: Rect;
+    labelSettings: LabelSettings;
+}
+
+export function drawTimeXGridInstruction(
+    color: string,
+    lineWidth: number,
+    gridRect: Rect,
+    labelSettings: LabelSettings,
+): DrawXGridInstruction {
+    return { type: "drawTimeXGrid", color, lineWidth, gridRect, labelSettings };
+}
+
+export interface DrawYGridInstruction {
+    type: "drawYGrid";
     color: string;
     lineWidth: number;
     gridRect: Rect;
     yBounds: Bounds;
 }
 
-export function drawGridInstruction(
+export function drawYGridInstruction(
     color: string,
     lineWidth: number,
     gridRect: Rect,
     yBounds: Bounds,
-): DrawGridInstruction {
-    return { type: "drawGrid", color, lineWidth, gridRect, yBounds };
+): DrawYGridInstruction {
+    return { type: "drawYGrid", color, lineWidth, gridRect, yBounds };
 }
 
 export interface DrawYLegendInstruction {
