@@ -1,6 +1,5 @@
 import { ChartSettings } from "../settings-types";
-import { Bounds } from "../basic-types";
-import { LineId, LineInfo } from "./chart-worker-messages";
+import { Bounds, LineData } from "../basic-types";
 
 export interface DrawContext {
     canvas: OffscreenCanvas;
@@ -8,8 +7,23 @@ export interface DrawContext {
     devicePixelRatio: number;
 }
 
+export type Id = string;
+
+export interface LineInfo {
+    points: LineData;
+    color: string;
+    lineWidth: number;
+    yBounds: Bounds;
+}
+
+export interface VerticalFilling {
+    intervals: Bounds[];
+    color: string;
+}
+
 export interface ChartInfo {
     settings: ChartSettings;
     xBounds: Bounds;
-    lines: Map<LineId, LineInfo>;
+    lines: Map<Id, LineInfo>;
+    verticalFillings: Map<Id, VerticalFilling>;
 }

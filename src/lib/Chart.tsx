@@ -12,34 +12,43 @@ import React, {
 import { useWorkerCreator } from "./WorkerCreatorContext";
 import {
     addLineMessage,
+    addVerticalFillingMessage,
     changeLineMessage,
-    LineInfo,
-    LineId,
+    changeVerticalFillingMessage,
     removeLineMessage,
+    removeVerticalFillingMessage,
     setCanvasMessage,
     setCanvasSizeMessage,
     setChartSettingsMessage,
     setXBoundsAndRedrawMessage,
-    setDevicePixelRatioMessage,
 } from "./chart-worker/chart-worker-messages";
 import { useUnmount } from "react-use";
 import { useBoundsContext } from "./BoundsManager";
 import { Manipulator } from "./Manipulator";
 import { DeepPartial, noop } from "ts-essentials";
 import deepmerge from "deepmerge";
-import { divSize, mulSize, Size } from "./basic-types";
+import { divSize, Size } from "./basic-types";
 import { calcGridAreaLpx, ChartSettings, defaultChartSettings } from "./settings-types";
+import { Id, LineInfo, VerticalFilling } from "./chart-worker/worker-types";
 
 interface ChartContextType {
-    addLine(id: LineId, lineInfo: LineInfo): void;
-    changeLine(id: LineId, lineInfo: Partial<LineInfo>): void;
-    removeLine(id: LineId): void;
+    addLine(id: Id, lineInfo: LineInfo): void;
+    changeLine(id: Id, lineInfo: Partial<LineInfo>): void;
+    removeLine(id: Id): void;
+
+    addVerticalFilling(id: Id, verticalFilling: VerticalFilling): void;
+    changeVerticalFilling(id: Id, verticalFilling: Partial<VerticalFilling>): void;
+    removeVerticalFilling(id: Id): void;
 }
 
 export const ChartContext = createContext<ChartContextType>({
     addLine: noop,
     changeLine: noop,
     removeLine: noop,
+
+    addVerticalFilling: noop,
+    changeVerticalFilling: noop,
+    removeVerticalFilling: noop,
 });
 
 export function useChartContext(): ChartContextType {
@@ -58,14 +67,14 @@ function overwriteMerge<T>(_: T[], sourceArray: T[]): T[] {
     return sourceArray;
 }
 
-export function Chart(props: ChartProps) {
+function useWorker() {
     const workerCreator = useWorkerCreator();
-    const worker = useMemo(() => {
-        console.log("CREATE WORKER");
-        return workerCreator();
-    }, [workerCreator]);
+    const worker = useMemo(() => workerCreator(), [workerCreator]);
     useUnmount(() => worker.terminate());
+    return worker;
+}
 
+function useCanvas(onResize: (sizeCpx: Size) => void) {
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
     const [canvasSizeCpx, setCanvasSizeCpx] = useState<Size>({ width: 100, height: 100 });
@@ -75,9 +84,9 @@ export function Chart(props: ChartProps) {
             if (canvas == null) return;
             const { inlineSize: width, blockSize: height } = entries[0].devicePixelContentBoxSize[0];
             setCanvasSizeCpx({ width, height });
-            worker.postMessage(setCanvasSizeMessage(width, height));
+            onResize({ width, height });
         },
-        [canvas, setCanvasSizeCpx],
+        [canvas, setCanvasSizeCpx, onResize],
     );
 
     const sizeObserver = useMemo(() => new ResizeObserver(onCanvasResize), [onCanvasResize]);
@@ -87,6 +96,19 @@ export function Chart(props: ChartProps) {
         return () => sizeObserver.unobserve(canvas);
     }, [canvas, sizeObserver]);
 
+    return { canvas, setCanvas, canvasSizeCpx };
+}
+
+export function Chart(props: ChartProps) {
+    const worker = useWorker();
+
+    const onCanvasResize = useCallback(
+        (sizeCpx: Size) => worker.postMessage(setCanvasSizeMessage(sizeCpx.width, sizeCpx.height)),
+        [worker],
+    );
+
+    const { canvas, setCanvas, canvasSizeCpx } = useCanvas(onCanvasResize);
+
     useEffect(() => {
         if (canvas == null) return;
 
@@ -95,7 +117,7 @@ export function Chart(props: ChartProps) {
     }, [canvas]);
 
     useEffect(() => {
-        worker?.postMessage(setDevicePixelRatioMessage(window.devicePixelRatio));
+        worker?.postMessage(setCanvasMessage(undefined, window.devicePixelRatio));
     }, [window.devicePixelRatio]);
 
     const effectiveSettings = useMemo(
@@ -125,6 +147,12 @@ export function Chart(props: ChartProps) {
             addLine: (id, lineInfo) => worker.postMessage(addLineMessage(id, lineInfo)),
             changeLine: (id, lineInfo) => worker.postMessage(changeLineMessage(id, lineInfo)),
             removeLine: (id) => worker.postMessage(removeLineMessage(id)),
+
+            addVerticalFilling: (id, verticalFilling) =>
+                worker.postMessage(addVerticalFillingMessage(id, verticalFilling)),
+            changeVerticalFilling: (id, verticalFilling) =>
+                worker.postMessage(changeVerticalFillingMessage(id, verticalFilling)),
+            removeVerticalFilling: (id) => worker.postMessage(removeVerticalFillingMessage(id)),
         }),
         [worker],
     );

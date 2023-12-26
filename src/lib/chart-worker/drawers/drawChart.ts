@@ -6,9 +6,10 @@ import { drawYGrid } from "./drawYGrid";
 import { drawTimeXLegend } from "./drawTimeXLegend";
 import { drawYLegend } from "./drawYLegend";
 import { drawLine } from "./drawLine";
+import { drawVerticalFilling } from "./drawVerticalFilling";
 
 export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
-    const { settings, lines, xBounds } = chartInfo;
+    const { settings, lines, verticalFillings, xBounds } = chartInfo;
 
     const { canvas, ctx } = drawContext;
 
@@ -43,6 +44,9 @@ export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
     const clipPath = new Path2D();
     clipPath.rect(plotArea.x, plotArea.y, plotArea.width, plotArea.height);
     ctx.clip(clipPath);
+    for (const fillingAttrs of verticalFillings.values()) {
+        drawVerticalFilling(drawContext, fillingAttrs, xBounds, plotArea);
+    }
     for (const lineAttrs of lines.values()) {
         drawLine(drawContext, lineAttrs, xBounds, plotArea);
     }

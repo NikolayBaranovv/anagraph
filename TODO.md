@@ -1,3 +1,7 @@
+- Chart (V2)
+  - [ ] FPS meter
+  - [ ] Intervals
+
 - IntervalChart
   - Currently, IntervalChart story sometimes show empty canvas. Why?
   - Adding/Removing interval chart will cause all other elements to re-add their instructions

@@ -1,33 +1,27 @@
-import { Bounds, LineData } from "../basic-types";
+import { Bounds } from "../basic-types";
 import { ChartSettings } from "../settings-types";
+import { Id, LineInfo, VerticalFilling } from "./worker-types";
 
 export type MainToChartWorkerMessage =
     | SetCanvasMessage
     | SetCanvasSizeMessage
-    | SetDevicePixelRatioMessage
     | SetXBoundsAndRedrawMessage
     | SetChartSettingsMessage
     | AddLineMessage
     | ChangeLineMessage
-    | RemoveLineMessage;
+    | RemoveLineMessage
+    | AddVerticalFillingMessage
+    | ChangeVerticalFillingMessage
+    | RemoveVerticalFillingMessage;
 
 interface SetCanvasMessage {
     type: "setCanvas";
-    canvas: OffscreenCanvas;
+    canvas?: OffscreenCanvas;
     devicePixelRatio: number;
 }
 
-interface SetDevicePixelRatioMessage {
-    type: "setDevicePixelRatio";
-    devicePixelRatio: number;
-}
-
-export function setCanvasMessage(canvas: OffscreenCanvas, devicePixelRatio: number): SetCanvasMessage {
+export function setCanvasMessage(canvas: OffscreenCanvas | undefined, devicePixelRatio: number): SetCanvasMessage {
     return { type: "setCanvas", canvas, devicePixelRatio };
-}
-
-export function setDevicePixelRatioMessage(devicePixelRatio: number): SetDevicePixelRatioMessage {
-    return { type: "setDevicePixelRatio", devicePixelRatio };
 }
 
 interface SetCanvasSizeMessage {
@@ -58,39 +52,63 @@ export function setChartSettingsMessage(chartSettings: ChartSettings): SetChartS
     return { type: "setChartSettings", chartSettings };
 }
 
-export type LineId = string;
-export interface LineInfo {
-    points: LineData;
-    color: string;
-    lineWidth: number;
-    yBounds: Bounds;
-}
-
 interface AddLineMessage {
     type: "addLine";
-    id: LineId;
+    id: Id;
     lineInfo: LineInfo;
 }
 
-export function addLineMessage(id: LineId, lineInfo: LineInfo): AddLineMessage {
+export function addLineMessage(id: Id, lineInfo: LineInfo): AddLineMessage {
     return { type: "addLine", id, lineInfo };
 }
 
 interface ChangeLineMessage {
     type: "changeLine";
-    id: LineId;
+    id: Id;
     lineInfo: Partial<LineInfo>;
 }
 
-export function changeLineMessage(id: LineId, lineInfo: Partial<LineInfo>): ChangeLineMessage {
+export function changeLineMessage(id: Id, lineInfo: Partial<LineInfo>): ChangeLineMessage {
     return { type: "changeLine", id, lineInfo };
 }
 
 interface RemoveLineMessage {
     type: "removeLine";
-    id: LineId;
+    id: Id;
 }
 
-export function removeLineMessage(id: LineId): RemoveLineMessage {
+export function removeLineMessage(id: Id): RemoveLineMessage {
     return { type: "removeLine", id };
+}
+
+interface AddVerticalFillingMessage {
+    type: "addVerticalFilling";
+    id: Id;
+    verticalFilling: VerticalFilling;
+}
+
+export function addVerticalFillingMessage(id: Id, verticalFilling: VerticalFilling): AddVerticalFillingMessage {
+    return { type: "addVerticalFilling", id, verticalFilling };
+}
+
+interface ChangeVerticalFillingMessage {
+    type: "changeVerticalFilling";
+    id: Id;
+    verticalFilling: Partial<VerticalFilling>;
+}
+
+export function changeVerticalFillingMessage(
+    id: Id,
+    verticalFilling: Partial<VerticalFilling>,
+): ChangeVerticalFillingMessage {
+    return { type: "changeVerticalFilling", id, verticalFilling };
+}
+
+interface RemoveVerticalFillingMessage {
+    type: "removeVerticalFilling";
+    id: Id;
+}
+
+export function removeVerticalFillingMessage(id: Id): RemoveVerticalFillingMessage {
+    return { type: "removeVerticalFilling", id };
 }

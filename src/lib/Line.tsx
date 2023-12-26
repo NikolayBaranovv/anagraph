@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useChartContext } from "./Chart";
-import { LineId } from "./chart-worker/chart-worker-messages";
 import { useUpdateEffect } from "react-use";
 import { Bounds, LineData } from "./basic-types";
+import { useId } from "./utils";
 
 interface LineProps {
     points: LineData;
@@ -14,7 +14,7 @@ interface LineProps {
 export function Line(props: LineProps) {
     const { points, color, lineWidth = 2, yBounds } = props;
 
-    const [id] = useState<LineId>(Math.random().toString(36).slice(2));
+    const id = useId();
 
     const chartContext = useChartContext();
 

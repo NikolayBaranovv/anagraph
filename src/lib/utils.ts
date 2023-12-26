@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Bounds, LineData } from "./basic-types";
+import { Id } from "./chart-worker/worker-types";
 
 export function scale(value: number, oldBounds: Bounds, newBounds: Bounds): number {
     return ((value - oldBounds[0]) / (oldBounds[1] - oldBounds[0])) * (newBounds[1] - newBounds[0]) + newBounds[0];
@@ -202,4 +204,9 @@ export function* generateTimeTicks(range: Bounds, pixels: number, minSize: numbe
 
 export function assertNever(value: never): never {
     throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
+}
+
+export function useId() {
+    const [id] = useState<Id>(Math.random().toString(36).slice(2));
+    return id;
 }

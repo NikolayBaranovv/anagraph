@@ -1,7 +1,7 @@
 import { MainToChartWorkerMessage } from "./chart-worker-messages";
 import { assertNever } from "../utils";
 import { defaultChartSettings } from "../settings-types";
-import { ChartInfo, DrawContext } from "./worker-types";
+import { ChartInfo, DrawContext, Id, LineInfo, VerticalFilling } from "./worker-types";
 import { drawChart } from "./drawers/drawChart";
 
 export function startChartWorker() {
@@ -10,7 +10,8 @@ export function startChartWorker() {
     const chartInfo: ChartInfo = {
         settings: defaultChartSettings,
         xBounds: [0, 1],
-        lines: new Map(),
+        lines: new Map<Id, LineInfo>(),
+        verticalFillings: new Map<Id, VerticalFilling>(),
     };
 
     let drawPlanned = false;
@@ -30,23 +31,23 @@ export function startChartWorker() {
     addEventListener("message", (msg: MessageEvent<MainToChartWorkerMessage>) => {
         switch (msg.data.type) {
             case "setCanvas": {
-                drawContext = null;
-                const ctx = msg.data.canvas.getContext("2d", { desynchronized: true }) ?? null;
-                if (ctx) {
-                    drawContext = {
-                        canvas: msg.data.canvas,
-                        ctx,
-                        devicePixelRatio: msg.data.devicePixelRatio,
-                    };
+                const { canvas, devicePixelRatio } = msg.data;
+                if (canvas) {
+                    const ctx = canvas.getContext("2d", { desynchronized: true });
+                    if (ctx) {
+                        drawContext = {
+                            canvas,
+                            ctx,
+                            devicePixelRatio,
+                        };
+                    } else {
+                        drawContext = null;
+                    }
                 }
-                break;
-            }
-
-            case "setDevicePixelRatio": {
                 if (drawContext) {
                     drawContext.devicePixelRatio = msg.data.devicePixelRatio;
-                    planRedraw();
                 }
+                planRedraw();
                 break;
             }
 
@@ -87,6 +88,27 @@ export function startChartWorker() {
 
             case "removeLine": {
                 chartInfo.lines.delete(msg.data.id);
+                planRedraw();
+                break;
+            }
+
+            case "addVerticalFilling": {
+                chartInfo.verticalFillings.set(msg.data.id, msg.data.verticalFilling);
+                planRedraw();
+                break;
+            }
+
+            case "changeVerticalFilling": {
+                const filling = chartInfo.verticalFillings.get(msg.data.id);
+                if (filling) {
+                    chartInfo.verticalFillings.set(msg.data.id, { ...filling, ...msg.data.verticalFilling });
+                    planRedraw();
+                }
+                break;
+            }
+
+            case "removeVerticalFilling": {
+                chartInfo.verticalFillings.delete(msg.data.id);
                 planRedraw();
                 break;
             }

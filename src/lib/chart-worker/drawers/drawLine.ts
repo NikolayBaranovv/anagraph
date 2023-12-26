@@ -1,5 +1,4 @@
-import { DrawContext } from "../worker-types";
-import { LineInfo } from "../chart-worker-messages";
+import { DrawContext, LineInfo } from "../worker-types";
 import { Bounds, Rect } from "../../basic-types";
 import { visualDownsample } from "../../downsample";
 
