@@ -1,4 +1,5 @@
-import { Bounds, DrawingInstruction } from "../drawing-types";
+import { DrawingInstruction } from "../drawing-types";
+import { Bounds } from "../../lib/basic-types";
 
 export type MainToWorkerMessage =
     | SetCanvasMessage

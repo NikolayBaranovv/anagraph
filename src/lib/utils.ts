@@ -1,10 +1,10 @@
-import { Bounds, GraphData } from "./drawing-types";
+import { Bounds, LineData } from "./basic-types";
 
 export function scale(value: number, oldBounds: Bounds, newBounds: Bounds): number {
     return ((value - oldBounds[0]) / (oldBounds[1] - oldBounds[0])) * (newBounds[1] - newBounds[0]) + newBounds[0];
 }
 
-export function generateRandomData([minx, maxx]: Bounds, [miny, maxy]: Bounds, n: number, index: number): GraphData {
+export function generateRandomData([minx, maxx]: Bounds, [miny, maxy]: Bounds, n: number, index: number): LineData {
     const data = new Array(n);
     for (let i = 0; i < n; i++) {
         const x = minx + ((maxx - minx) / n) * i;

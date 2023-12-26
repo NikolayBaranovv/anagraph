@@ -2,7 +2,6 @@ import { Meta, StoryObj } from "@storybook/react";
 import { complexLinesJSON } from "./complex-data.no-prettier";
 import {
     Background,
-    BoundsManager,
     Canvas,
     FPSIndicator,
     FPSManager,
@@ -14,10 +13,11 @@ import {
     YAxisProvider,
     YGrid,
     YLegend,
-} from "../lib";
+} from "../lib-v1";
+import { BoundsManager } from "../lib";
 
 export default {
-    title: "Anagraph/Complex Examples",
+    title: "Anagraph V1/Complex Examples",
     decorators: [
         (Story) => (
             <FPSManager>

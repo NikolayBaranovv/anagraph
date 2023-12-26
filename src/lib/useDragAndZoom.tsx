@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { noop, SafeDictionary } from "ts-essentials";
-import { Bounds } from "./drawing-types";
+
+import { Bounds } from "./basic-types";
 
 interface TouchDetails {
     originX: number;

@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { noop } from "ts-essentials";
-import { useCallbackList } from "./useCallbackList";
+import { useCallbackList } from "../lib/useCallbackList";
 
 type FPSHandler = (fps: number) => void;
 type SetCounter = (fps: number) => void;

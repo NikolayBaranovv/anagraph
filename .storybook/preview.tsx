@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
 import AnagraphWorker from "../src/stories/storybook-worker";
+import AnagraphChartWorker from "../src/stories/storybook-chart-worker";
 import { WorkerCreatorProvider } from "../src/lib";
 
 const preview: Preview = {
@@ -13,7 +14,19 @@ const preview: Preview = {
         },
     },
     decorators: [
-        (Story) => <WorkerCreatorProvider workerCreator={() => new AnagraphWorker()}>{Story()}</WorkerCreatorProvider>,
+        (Story, context) => {
+            if (context.args._chartWorker) {
+                return (
+                    <WorkerCreatorProvider workerCreator={() => new AnagraphChartWorker()}>
+                        {Story()}
+                    </WorkerCreatorProvider>
+                );
+            } else {
+                return (
+                    <WorkerCreatorProvider workerCreator={() => new AnagraphWorker()}>{Story()}</WorkerCreatorProvider>
+                );
+            }
+        },
     ],
 };
 

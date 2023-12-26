@@ -1,4 +1,5 @@
-import { Bounds, DrawVerticalFillingInstruction } from "../../drawing-types";
+import { DrawVerticalFillingInstruction } from "../../drawing-types";
+import { Bounds } from "../../../lib/basic-types";
 
 export function doDrawVerticalFilling(
     instruction: DrawVerticalFillingInstruction,

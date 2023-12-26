@@ -1,4 +1,4 @@
-import { Bounds } from "./drawing-types";
+import { Bounds } from "./basic-types";
 
 type ArrayWithFirstTyped<V> = [V, ...any[]];
 

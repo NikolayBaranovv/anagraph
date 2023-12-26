@@ -1,3 +1,8 @@
+- IntervalChart
+  - Currently, IntervalChart story sometimes show empty canvas. Why?
+  - Adding/Removing interval chart will cause all other elements to re-add their instructions
+  - Maybe remove layout from drawing instructions and calculate it in the worker thread?
+
 - [ ] Fix touchpad zooming performance by debouncing "manipulation end" event
 - [ ] What about bitblt optimization of horizontal drag?..
 - [ ] Move LabelSettings to <*Legend/> props

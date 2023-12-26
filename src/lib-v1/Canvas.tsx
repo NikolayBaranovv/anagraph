@@ -11,12 +11,12 @@ import React, {
     useState,
 } from "react";
 import { noop } from "ts-essentials";
-import { useBoundsContext } from "./BoundsManager";
+import { useBoundsContext } from "../lib/BoundsManager";
 import { useSetFPSCounter } from "./fps";
 
-import { DrawingInstruction, Size } from "./drawing-types";
+import { DrawingInstruction } from "./drawing-types";
 import { useLatest } from "react-use";
-import { useWorkerCreator } from "./WorkerCreatorContext";
+import { useWorkerCreator } from "../lib/WorkerCreatorContext";
 import {
     setCanvasMessage,
     setCanvasSizeMessage,
@@ -24,7 +24,8 @@ import {
     setXBoundsAndRedrawMessage,
     WorkerToMainMessage,
 } from "./worker/worker-messages";
-import { assertNever } from "./utils";
+import { assertNever } from "../lib/utils";
+import { Size } from "../lib/basic-types";
 
 interface CanvasContextType {
     canvasSizeCpx: Size;
@@ -83,9 +84,7 @@ export function Canvas(props: CanvasProps): ReactElement {
         setWorker(wrk);
         sendInstructions.current();
 
-        return () => {
-            wrk.terminate();
-        };
+        return () => wrk.terminate();
     }, [canvas]);
 
     const setFPSCounter = useSetFPSCounter();
@@ -144,10 +143,12 @@ export function Canvas(props: CanvasProps): ReactElement {
 
     const instructions = useRef<DrawingInstruction[]>([]);
     const addDrawingInstruction = useCallback((instruction: DrawingInstruction) => {
+        console.log("addDrawInstruction");
         instructions.current.push(instruction);
         planSendInstructions();
     }, []);
     const removeDrawingInstruction = useCallback((instruction: DrawingInstruction) => {
+        console.log("removeDrawInstruction");
         const index = instructions.current.indexOf(instruction);
         if (index !== -1) {
             instructions.current.splice(index, 1);

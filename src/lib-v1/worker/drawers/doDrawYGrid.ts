@@ -1,5 +1,6 @@
-import { Bounds, DrawYGridInstruction } from "../../drawing-types";
-import { generateTicks, scale } from "../../utils";
+import { DrawYGridInstruction } from "../../drawing-types";
+import { generateTicks, scale } from "../../../lib/utils";
+import { Bounds } from "../../../lib/basic-types";
 
 export function doDrawYGrid(
     instruction: DrawYGridInstruction,

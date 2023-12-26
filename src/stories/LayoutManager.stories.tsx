@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import {
     Background,
-    BoundsManager,
     Canvas,
     LayoutManager,
     Line,
@@ -11,11 +10,12 @@ import {
     YAxisProvider,
     YGrid,
     YLegend,
-} from "../lib";
+} from "../lib-v1";
 import { monthXBounds, randomDataForMonth, yBounds100 } from "./stories-constants";
+import { BoundsManager } from "../lib";
 
 export default {
-    title: "Anagraph/LayoutManager",
+    title: "Anagraph V1/LayoutManager",
     component: LayoutManager,
 } satisfies Meta<typeof LayoutManager>;
 

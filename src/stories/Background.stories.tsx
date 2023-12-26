@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Background, Canvas } from "../lib";
+import { Background, Canvas } from "../lib-v1";
 
 const meta = {
-    title: "Anagraph/Background",
+    title: "Anagraph V1/Background",
     component: Background,
     decorators: [
         (Story) => (

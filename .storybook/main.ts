@@ -22,14 +22,13 @@ const config: StorybookConfig = {
                 ...config.module,
                 rules: [
                     {
-                        test: /storybook-worker\.ts$/,
+                        test: /storybook-(chart-)?worker\.ts$/,
                         use: ["worker-loader"],
                     },
                     ...(config.module?.rules ?? []),
                 ],
             },
         };
-        console.log("newConfig.module.rules", newConfig.module.rules);
         return newConfig;
     },
 };

@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { BoundsManager } from "../lib";
 import {
     Background,
-    BoundsManager,
     Canvas,
     FPSIndicator,
     FPSManager,
@@ -12,11 +12,11 @@ import {
     YAxisProvider,
     YGrid,
     YLegend,
-} from "../lib";
+} from "../lib-v1";
 import { monthXBounds, randomDataForMonth, yBounds100 } from "./stories-constants";
 
 export default {
-    title: "Anagraph/Line",
+    title: "Anagraph V1/Line",
     component: Line,
     decorators: [
         (Story) => (
@@ -28,6 +28,39 @@ export default {
 } satisfies Meta<typeof Line>;
 
 type Story = StoryObj<typeof Line>;
+
+export const Simple: Story = {
+    args: {
+        color: "#3b73c4",
+        lineWidth: 3,
+        data: [
+            [-3, 9],
+            [-2, 4],
+            [-1, 1],
+            [0, 0],
+            [1, 1],
+            [2, 4],
+            [3, 9],
+        ],
+    },
+
+    render: (args) => (
+        <BoundsManager initialXBounds={[-10, 10]}>
+            <YAxisProvider bounds={[-2, 10]}>
+                <FPSIndicator />
+                <Canvas style={{ height: "650px", outline: "1px solid #c0c0c0" }}>
+                    <Manipulator />
+                    <Background />
+                    <TimeXGrid />
+                    <YGrid />
+                    <Line {...args} />
+                    <TimeXLegend />
+                    <YLegend />
+                </Canvas>
+            </YAxisProvider>
+        </BoundsManager>
+    ),
+};
 
 export const MonthOfData: Story = {
     args: {

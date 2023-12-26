@@ -1,25 +1,11 @@
 import { LabelSettings } from "./LayoutManager";
-
-export type Bounds = Readonly<[number, number]>;
-
-export type GraphData = [number, number][];
-
-export interface Size {
-    width: number;
-    height: number;
-}
-
-export interface Offset {
-    x: number;
-    y: number;
-}
-
-export type Rect = Offset & Size;
+import { Bounds, LineData, Rect } from "../lib/basic-types";
 
 export type DrawingInstruction =
     | ClearBackgroundInstruction
     | DrawLineInstruction
     | DrawVerticalFillingInstruction
+    | DrawIntervalChartInstruction
     | DrawXGridInstruction
     | DrawYGridInstruction
     | DrawYLegendInstruction
@@ -42,7 +28,7 @@ export function clearBackgroundInstruction(
 
 export interface DrawLineInstruction {
     type: "drawLine";
-    points: GraphData;
+    points: LineData;
     color: string;
     gridRect: Rect;
     yBounds: Bounds;
@@ -50,7 +36,7 @@ export interface DrawLineInstruction {
 }
 
 export function drawLineInstruction(
-    points: GraphData,
+    points: LineData,
     color: string,
     gridRect: Rect,
     yBounds: Bounds,
@@ -72,6 +58,16 @@ export function drawVerticalFillingInstruction(
     gridRect: Rect,
 ): DrawVerticalFillingInstruction {
     return { type: "drawVerticalFilling", intervals, color, gridRect };
+}
+
+export interface DrawIntervalChartInstruction {
+    type: "drawIntervalChart";
+    intervals: Bounds[];
+    color: string;
+}
+
+export function drawIntervalChartInstruction(intervals: Bounds[], color: string): DrawIntervalChartInstruction {
+    return { type: "drawIntervalChart", intervals, color };
 }
 
 export interface DrawXGridInstruction {

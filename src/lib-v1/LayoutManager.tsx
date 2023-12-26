@@ -1,6 +1,8 @@
-import { createContext, ReactElement, ReactNode, useContext, useMemo } from "react";
+import { createContext, ReactElement, ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import { noop } from "ts-essentials";
 import { useCanvasContext } from "./Canvas";
-import { Rect } from "./drawing-types";
+
+import { Rect } from "../lib";
 
 // cpx -- canvas pixels (physical device pixels)
 // lpx -- logical pixels (css px)
@@ -44,21 +46,43 @@ const defaultLayout: Layout = {
         yLabelsHeight: 48,
     },
 };
-const LayoutContext = createContext<Layout>(defaultLayout);
+
+interface LayoutContextType {
+    layout: Layout;
+    intervalChartsCount: number;
+    addIntervalChart: () => void;
+    removeIntervalChart: () => void;
+}
+
+const LayoutContext = createContext<LayoutContextType>({
+    layout: defaultLayout,
+    intervalChartsCount: 0,
+    addIntervalChart: noop,
+    removeIntervalChart: noop,
+});
 
 interface LayoutManagerProps extends Partial<Layout> {
     children: ReactNode | ReactNode[];
 }
 export function LayoutManager(props: LayoutManagerProps): ReactElement {
-    const value = useMemo(
-        () => ({ ...defaultLayout, ...props }),
-        [props.bottomLabelsHeight, props.leftLabelsWidth, props.topGap, props.labelsSettings],
+    const [intervalChartsCount, setIntervalChartsCount] = useState(0);
+    const addIntervalChart = useCallback(() => setIntervalChartsCount((value) => value + 1), []);
+    const removeIntervalChart = useCallback(() => setIntervalChartsCount((value) => value - 1), []);
+
+    const value = useMemo<LayoutContextType>(
+        () => ({
+            layout: { ...defaultLayout, ...props },
+            intervalChartsCount,
+            addIntervalChart,
+            removeIntervalChart,
+        }),
+        [props.bottomLabelsHeight, props.leftLabelsWidth, props.topGap, props.labelsSettings, intervalChartsCount],
     );
     return <LayoutContext.Provider value={value}>{props.children}</LayoutContext.Provider>;
 }
 
 export function useGridRectCpx(): Rect {
-    const layout = useContext(LayoutContext);
+    const { layout, intervalChartsCount } = useContext(LayoutContext);
     const { canvasSizeCpx } = useCanvasContext();
 
     const dpr = window.devicePixelRatio;
@@ -68,14 +92,18 @@ export function useGridRectCpx(): Rect {
             x: layout.leftLabelsWidth * dpr,
             y: layout.topGap * dpr,
             width: canvasSizeCpx.width - layout.leftLabelsWidth * dpr,
-            height: canvasSizeCpx.height - layout.bottomLabelsHeight * dpr - layout.topGap * dpr,
+            height:
+                canvasSizeCpx.height -
+                layout.bottomLabelsHeight * dpr -
+                layout.topGap * dpr -
+                10 * dpr * intervalChartsCount,
         }),
-        [layout, canvasSizeCpx, dpr],
+        [layout, canvasSizeCpx, dpr, intervalChartsCount],
     );
 }
 
 export function useGridRectLpx(): Rect {
-    const layout = useContext(LayoutContext);
+    const { layout, intervalChartsCount } = useContext(LayoutContext);
     const { canvasSizeCpx } = useCanvasContext();
 
     const dpr = window.devicePixelRatio;
@@ -85,13 +113,18 @@ export function useGridRectLpx(): Rect {
             x: layout.leftLabelsWidth,
             y: layout.topGap,
             width: canvasSizeCpx.width / dpr - layout.leftLabelsWidth,
-            height: canvasSizeCpx.height / dpr - layout.bottomLabelsHeight - layout.topGap,
+            height: canvasSizeCpx.height / dpr - layout.bottomLabelsHeight - layout.topGap - 10 * intervalChartsCount,
         }),
-        [layout, canvasSizeCpx, dpr],
+        [layout, canvasSizeCpx, dpr, intervalChartsCount],
     );
 }
 
 export function useLabelSettings(): LabelSettings {
-    const layout = useContext(LayoutContext);
+    const { layout } = useContext(LayoutContext);
     return layout.labelsSettings;
+}
+
+export function useIntervalChartsCounter(): [() => void, () => void] {
+    const { addIntervalChart, removeIntervalChart } = useContext(LayoutContext);
+    return [addIntervalChart, removeIntervalChart];
 }

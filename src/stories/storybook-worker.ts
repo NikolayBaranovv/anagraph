@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import { startAnagraphWorker } from "../lib";
+import { startAnagraphWorker } from "../lib-v1";
 
 startAnagraphWorker();
 

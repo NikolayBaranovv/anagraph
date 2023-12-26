@@ -1,16 +1,18 @@
-import { CSSProperties, useState } from "react";
-import { useDragAndZoom } from "./useDragAndZoom";
-import { useBoundsContext } from "./BoundsManager";
-import { Bounds } from "./basic-types";
+import React, { useState } from "react";
+import { useBoundsContext } from "../lib/BoundsManager";
+import { useDragAndZoom } from "../lib/useDragAndZoom";
+import { useGridRectLpx } from "./LayoutManager";
 
-interface ManipulatorProps {
-    style: CSSProperties;
+import { Bounds } from "../lib";
+
+export interface ManipulatorProps {
     boundsLimit?: Bounds;
 }
 
 export function Manipulator(props: ManipulatorProps) {
     const { boundsLimit } = props;
     const { settledXBounds, onManipulation, onManipulationEnd } = useBoundsContext();
+    const gridLayout = useGridRectLpx();
 
     const [glass, setGlass] = useState<HTMLDivElement | null>(null);
 
@@ -21,8 +23,11 @@ export function Manipulator(props: ManipulatorProps) {
             className="glass"
             style={{
                 position: "absolute",
+                top: gridLayout.y,
+                left: gridLayout.x,
+                width: gridLayout.width,
+                height: gridLayout.height,
                 touchAction: "none",
-                ...props.style,
             }}
             ref={setGlass}
         />

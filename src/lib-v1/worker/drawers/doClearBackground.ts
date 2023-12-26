@@ -1,4 +1,5 @@
-import { Bounds, ClearBackgroundInstruction } from "../../drawing-types";
+import { ClearBackgroundInstruction } from "../../drawing-types";
+import { Bounds } from "../../../lib/basic-types";
 
 export function doClearBackground(
     instruction: ClearBackgroundInstruction,

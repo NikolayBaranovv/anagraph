@@ -1,9 +1,10 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Background, BoundsManager, Canvas, Manipulator, TimeXGrid, YAxisProvider, YGrid, YLegend } from "../lib";
+import { Background, Canvas, Manipulator, TimeXGrid, YAxisProvider, YGrid, YLegend } from "../lib-v1";
 import { yBounds100, yearXBounds } from "./stories-constants";
+import { BoundsManager } from "../lib";
 
 export default {
-    title: "Anagraph/YLegend",
+    title: "Anagraph V1/YLegend",
     component: YLegend,
     decorators: [
         (Story) => (

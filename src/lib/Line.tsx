@@ -1,26 +1,36 @@
-import { useGridRectCpx } from "./LayoutManager";
-import { useYAxisContext } from "./YAxisProvider";
-import { useDrawingInstruction } from "./Canvas";
-import { drawLineInstruction, GraphData } from "./drawing-types";
-import { useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useChartContext } from "./Chart";
+import { LineId } from "./chart-worker/chart-worker-messages";
+import { useUpdateEffect } from "react-use";
+import { Bounds, LineData } from "./basic-types";
 
 interface LineProps {
-    data: GraphData;
+    points: LineData;
     color: string;
-    lineWidth: number;
+    lineWidth?: number;
+    yBounds: Bounds;
 }
 
 export function Line(props: LineProps) {
-    const { data, color, lineWidth } = props;
-    const { bounds: yBounds } = useYAxisContext();
+    const { points, color, lineWidth = 2, yBounds } = props;
 
-    const gridRect = useGridRectCpx();
+    const [id] = useState<LineId>(Math.random().toString(36).slice(2));
 
-    const instruction = useMemo(
-        () => drawLineInstruction(data, color, gridRect, yBounds, lineWidth),
-        [data, color, gridRect, yBounds, lineWidth],
-    );
-    useDrawingInstruction(instruction);
+    const chartContext = useChartContext();
+
+    useEffect(() => {
+        chartContext.addLine(id, {
+            points,
+            color,
+            lineWidth,
+            yBounds,
+        });
+        return () => chartContext.removeLine(id);
+    }, []);
+
+    useUpdateEffect(() => {
+        chartContext.changeLine(id, { points, color, lineWidth, yBounds });
+    }, [points, color, lineWidth, yBounds]);
 
     return null;
 }

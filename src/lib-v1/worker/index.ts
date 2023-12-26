@@ -1,7 +1,8 @@
-import type { Bounds, DrawingInstruction } from "../drawing-types";
-import { assertNever } from "../utils";
+import type { DrawingInstruction } from "../drawing-types";
+import { assertNever } from "../../lib/utils";
 import { MainToWorkerMessage, statsReportMessage } from "./worker-messages";
 import { drawInstruction } from "./drawers";
+import { Bounds } from "../../lib/basic-types";
 
 let devicePixelRatio = 1;
 let canvas: OffscreenCanvas | null = null;
@@ -23,9 +24,12 @@ let framesDrawn = 0;
 function drawLatestInstructions() {
     if (!canvas || !ctx) return;
 
+    console.groupCollapsed("draw");
     for (const instruction of latestInstructions) {
+        console.log(instruction.type);
         drawInstruction(instruction, ctx, xBounds, devicePixelRatio);
     }
+    console.groupEnd();
 }
 
 function setInstructions(instructions: DrawingInstruction[]) {

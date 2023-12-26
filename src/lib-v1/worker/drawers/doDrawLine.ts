@@ -1,5 +1,6 @@
-import { Bounds, DrawLineInstruction } from "../../drawing-types";
-import { visualDownsample } from "../../downsample";
+import { DrawLineInstruction } from "../../drawing-types";
+import { visualDownsample } from "../../../lib/downsample";
+import { Bounds } from "../../../lib/basic-types";
 
 export function doDrawLine(
     instruction: DrawLineInstruction,

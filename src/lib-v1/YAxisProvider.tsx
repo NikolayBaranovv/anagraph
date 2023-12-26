@@ -1,6 +1,6 @@
 import { createContext, ReactElement, ReactNode, useContext, useMemo } from "react";
 
-import { Bounds } from "./drawing-types";
+import { Bounds } from "../lib";
 
 interface YAxisContextType {
     bounds: Bounds;

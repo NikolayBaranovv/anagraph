@@ -1,7 +1,8 @@
-import { Bounds, drawVerticalFillingInstruction } from "./drawing-types";
+import { drawVerticalFillingInstruction } from "./drawing-types";
 import { useGridRectCpx } from "./LayoutManager";
 import { useMemo } from "react";
 import { useDrawingInstruction } from "./Canvas";
+import { Bounds } from "../lib";
 
 interface VerticalFillingProps {
     intervals: Bounds[];

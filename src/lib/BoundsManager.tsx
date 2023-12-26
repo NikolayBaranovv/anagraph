@@ -10,7 +10,8 @@ import React, {
 } from "react";
 import { noop } from "ts-essentials";
 import { useCallbackList } from "./useCallbackList";
-import { Bounds } from "./drawing-types";
+
+import { Bounds } from "./basic-types";
 
 type BoundsHandler = (xBounds: Bounds) => void;
 

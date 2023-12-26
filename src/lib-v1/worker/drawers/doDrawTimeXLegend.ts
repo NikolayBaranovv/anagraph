@@ -1,6 +1,7 @@
-import { Bounds, DrawTimeXLegendInstruction } from "../../drawing-types";
-import { generateTimeTicks, scale } from "../../utils";
-import { timeXLabel } from "./labels";
+import { DrawTimeXLegendInstruction } from "../../drawing-types";
+import { generateTimeTicks, scale } from "../../../lib/utils";
+import { timeXLabel } from "../../../lib/chart-worker/labels";
+import { Bounds } from "../../../lib/basic-types";
 
 export function doDrawTimeXLegend(
     instruction: DrawTimeXLegendInstruction,

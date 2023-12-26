@@ -1,27 +1,29 @@
+import { Background, Canvas, Manipulator, TimeXGrid, TimeXLegend, IntervalChart, LayoutManager } from "../lib-v1";
 import { Meta, StoryObj } from "@storybook/react";
-import { Background, Canvas, Manipulator, TimeXGrid, TimeXLegend, VerticalFilling } from "../lib-v1";
 import { ts } from "./utils";
 import { BoundsManager } from "../lib";
 
 export default {
-    title: "Anagraph V1/VerticalFilling",
-    component: VerticalFilling,
+    title: "Anagraph V1/IntervalChart",
+    component: IntervalChart,
     decorators: [
         (Story) => (
             <BoundsManager initialXBounds={[ts(2022, 11, 31, 12), ts(2023, 0, 6, 12)]}>
-                <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0" }}>
-                    <Manipulator />
-                    <Background />
-                    <TimeXGrid />
-                    <Story />
-                    <TimeXLegend />
-                </Canvas>
+                <LayoutManager>
+                    <Canvas style={{ height: "350px", outline: "1px solid #c0c0c0" }}>
+                        <Manipulator />
+                        <Background />
+                        <TimeXGrid />
+                        <Story />
+                        <TimeXLegend />
+                    </Canvas>
+                </LayoutManager>
             </BoundsManager>
         ),
     ],
-} satisfies Meta<typeof VerticalFilling>;
+} satisfies Meta<typeof IntervalChart>;
 
-type Story = StoryObj<typeof VerticalFilling>;
+type Story = StoryObj<typeof IntervalChart>;
 
 export const Simple = {
     args: {
@@ -46,8 +48,8 @@ export const Overlapping: Story = {
 
     render: (args) => (
         <>
-            <VerticalFilling {...Simple.args} />
-            <VerticalFilling {...args} />
+            <IntervalChart {...Simple.args} />
+            <IntervalChart {...args} />
         </>
     ),
 };

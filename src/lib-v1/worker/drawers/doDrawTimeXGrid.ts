@@ -1,5 +1,6 @@
-import { Bounds, DrawXGridInstruction } from "../../drawing-types";
-import { generateTimeTicks, scale } from "../../utils";
+import { DrawXGridInstruction } from "../../drawing-types";
+import { generateTimeTicks, scale } from "../../../lib/utils";
+import { Bounds } from "../../../lib/basic-types";
 
 export function doDrawTimeXGrid(
     instruction: DrawXGridInstruction,

@@ -1,6 +1,7 @@
-import { Bounds, DrawYLegendInstruction } from "../../drawing-types";
-import { generateTicks, scale } from "../../utils";
-import { yLabel } from "./labels";
+import { DrawYLegendInstruction } from "../../drawing-types";
+import { generateTicks, scale } from "../../../lib/utils";
+import { yLabel } from "../../../lib/chart-worker/labels";
+import { Bounds } from "../../../lib/basic-types";
 
 export function doDrawYLegend(
     instruction: DrawYLegendInstruction,

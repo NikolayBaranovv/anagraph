@@ -1,12 +1,13 @@
-import { Bounds, DrawingInstruction } from "../../drawing-types";
+import { DrawingInstruction } from "../../drawing-types";
 import { doClearBackground } from "./doClearBackground";
 import { doDrawYGrid } from "./doDrawYGrid";
 import { doDrawYLegend } from "./doDrawYLegend";
 import { doDrawTimeXLegend } from "./doDrawTimeXLegend";
 import { doDrawLine } from "./doDrawLine";
-import { assertNever } from "../../utils";
+import { assertNever } from "../../../lib/utils";
 import { doDrawVerticalFilling } from "./doDrawVerticalFilling";
 import { doDrawTimeXGrid } from "./doDrawTimeXGrid";
+import { Bounds } from "../../../lib/basic-types";
 
 export function drawInstruction(
     instruction: DrawingInstruction,
@@ -48,6 +49,11 @@ export function drawInstruction(
 
         case "drawVerticalFilling": {
             doDrawVerticalFilling(instruction, ctx, xBounds);
+            break;
+        }
+
+        case "drawIntervalChart": {
+            // FIXME
             break;
         }
 
