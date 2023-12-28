@@ -16,6 +16,8 @@ import { Bounds } from "./basic-types";
 type BoundsHandler = (xBounds: Bounds) => void;
 
 interface BoundsContextType {
+    xBoundsLimit?: Bounds;
+
     addXBoundsCallback(fn: BoundsHandler): void;
 
     removeXBoundsCallback(fn: BoundsHandler): void;
@@ -43,19 +45,22 @@ const BoundsContext = createContext<BoundsContextType>({
 
 interface BoundsManagerProps {
     initialXBounds: Bounds;
+    xBoundsLimit?: Bounds;
 
     children: ReactNode | ReactNode[];
 }
 
 export function BoundsManager(props: BoundsManagerProps): ReactElement {
+    const { initialXBounds, xBoundsLimit, children } = props;
+
     const {
         addCallback: addXBoundsCallback,
         removeCallback: removeXBoundsCallback,
         callCallbacks: callXBoundsCallbacks,
     } = useCallbackList<BoundsHandler>();
 
-    const [finalXBounds, setFinalXBounds] = useState<Bounds>(props.initialXBounds);
-    const finalXBoundsRef = useRef(props.initialXBounds);
+    const [finalXBounds, setFinalXBounds] = useState<Bounds>(initialXBounds);
+    const finalXBoundsRef = useRef(initialXBounds);
     const tmpXBounds = useRef<Bounds | null>(null);
 
     const getCurrentXBounds = useRef(() => tmpXBounds.current ?? finalXBoundsRef.current).current;
@@ -78,6 +83,7 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
     );
 
     const contextValue: BoundsContextType = {
+        xBoundsLimit,
         addXBoundsCallback,
         removeXBoundsCallback,
         onManipulation,
@@ -87,7 +93,7 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
     };
     const context = useMemo(() => contextValue, Object.values(contextValue));
 
-    return <BoundsContext.Provider value={context}>{props.children}</BoundsContext.Provider>;
+    return <BoundsContext.Provider value={context}>{children}</BoundsContext.Provider>;
 }
 
 export function useBoundsContext(): BoundsContextType {

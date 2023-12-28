@@ -1,4 +1,5 @@
 - Chart (V2)
+  - [x] Limit bounds of zooming out
   - [ ] FPS meter
   - [ ] Intervals
 

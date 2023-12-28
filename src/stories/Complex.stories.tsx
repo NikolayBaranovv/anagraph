@@ -33,11 +33,11 @@ const complexLinesData = JSON.parse(complexLinesJSON);
 
 export const Z52467: Story = {
     render: (args) => (
-        <BoundsManager initialXBounds={complexLinesData.viewport}>
+        <BoundsManager initialXBounds={complexLinesData.viewport} xBoundsLimit={complexLinesData.viewport}>
             <YAxisProvider bounds={[0, 100]}>
                 <FPSIndicator />
                 <Canvas style={{ height: "450px", outline: "1px solid #c0c0c0" }}>
-                    <Manipulator boundsLimit={complexLinesData.viewport} />
+                    <Manipulator />
                     <Background />
                     <TimeXGrid />
                     <YGrid />

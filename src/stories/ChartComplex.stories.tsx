@@ -15,7 +15,7 @@ export const Z52467: Story = {
         _chartWorker: true,
     },
     render: () => (
-        <BoundsManager initialXBounds={complexLinesData.viewport}>
+        <BoundsManager initialXBounds={complexLinesData.viewport} xBoundsLimit={complexLinesData.viewport}>
             <Chart
                 style={{ height: "450px" }}
                 settings={{
