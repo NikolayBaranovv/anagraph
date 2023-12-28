@@ -11,25 +11,21 @@ import React, {
 } from "react";
 import { useWorkerCreator } from "./WorkerCreatorContext";
 import {
-    addLineMessage,
-    addVerticalFillingMessage,
-    changeLineMessage,
-    changeVerticalFillingMessage,
-    removeLineMessage,
-    removeVerticalFillingMessage,
+    MainToChartWorkerMessage,
     setCanvasMessage,
     setCanvasSizeMessage,
     setChartSettingsMessage,
     setXBoundsAndRedrawMessage,
-} from "./chart-worker/chart-worker-messages";
+} from "./chart-worker/messages";
 import { useUnmount } from "react-use";
 import { useBoundsContext } from "./BoundsManager";
 import { Manipulator } from "./Manipulator";
 import { DeepPartial, noop } from "ts-essentials";
 import deepmerge from "deepmerge";
 import { divSize, Size } from "./basic-types";
-import { calcGridAreaLpx, ChartSettings, defaultChartSettings } from "./settings-types";
-import { Id, LineInfo, VerticalFilling } from "./chart-worker/worker-types";
+import { ChartSettings, defaultChartSettings } from "./settings-types";
+import { BottomStatus, Id, LineInfo, VerticalFilling } from "./chart-worker/worker-types";
+import { calcManipulationAreaLpx } from "./layout-utils";
 
 interface ChartContextType {
     addLine(id: Id, lineInfo: LineInfo): void;
@@ -39,6 +35,10 @@ interface ChartContextType {
     addVerticalFilling(id: Id, verticalFilling: VerticalFilling): void;
     changeVerticalFilling(id: Id, verticalFilling: Partial<VerticalFilling>): void;
     removeVerticalFilling(id: Id): void;
+
+    addBottomStatus(id: Id, bottomStatus: BottomStatus): void;
+    changeBottomStatus(id: Id, bottomStatus: Partial<BottomStatus>): void;
+    removeBottomStatus(id: Id): void;
 }
 
 export const ChartContext = createContext<ChartContextType>({
@@ -49,6 +49,10 @@ export const ChartContext = createContext<ChartContextType>({
     addVerticalFilling: noop,
     changeVerticalFilling: noop,
     removeVerticalFilling: noop,
+
+    addBottomStatus: noop,
+    changeBottomStatus: noop,
+    removeBottomStatus: noop,
 });
 
 export function useChartContext(): ChartContextType {
@@ -142,23 +146,35 @@ export function Chart(props: ChartProps) {
         return () => removeXBoundsCallback(sendRedraw.current);
     }, []);
 
+    const sendMessage = useCallback(
+        (message: MainToChartWorkerMessage) => {
+            worker.postMessage(message);
+        },
+        [worker],
+    );
+
     const chartContextValue = useMemo<ChartContextType>(
         () => ({
-            addLine: (id, lineInfo) => worker.postMessage(addLineMessage(id, lineInfo)),
-            changeLine: (id, lineInfo) => worker.postMessage(changeLineMessage(id, lineInfo)),
-            removeLine: (id) => worker.postMessage(removeLineMessage(id)),
+            addLine: (id, lineInfo) => sendMessage({ type: "addLine", id, attrs: lineInfo }),
+            changeLine: (id, lineInfo) => sendMessage({ type: "changeLine", id, attrs: lineInfo }),
+            removeLine: (id) => sendMessage({ type: "removeLine", id }),
 
             addVerticalFilling: (id, verticalFilling) =>
-                worker.postMessage(addVerticalFillingMessage(id, verticalFilling)),
+                sendMessage({ type: "addVerticalFilling", id, attrs: verticalFilling }),
             changeVerticalFilling: (id, verticalFilling) =>
-                worker.postMessage(changeVerticalFillingMessage(id, verticalFilling)),
-            removeVerticalFilling: (id) => worker.postMessage(removeVerticalFillingMessage(id)),
+                sendMessage({ type: "changeVerticalFilling", id, attrs: verticalFilling }),
+            removeVerticalFilling: (id) => sendMessage({ type: "removeVerticalFilling", id }),
+
+            addBottomStatus: (id, bottomStatus) => sendMessage({ type: "addBottomStatus", id, attrs: bottomStatus }),
+            changeBottomStatus: (id, bottomStatus) =>
+                sendMessage({ type: "changeBottomStatus", id, attrs: bottomStatus }),
+            removeBottomStatus: (id) => sendMessage({ type: "removeBottomStatus", id }),
         }),
         [worker],
     );
 
     const gridAreaLpx = useMemo(
-        () => calcGridAreaLpx(divSize(canvasSizeCpx, window.devicePixelRatio), effectiveSettings),
+        () => calcManipulationAreaLpx(divSize(canvasSizeCpx, window.devicePixelRatio), effectiveSettings),
         [canvasSizeCpx, effectiveSettings],
     );
 

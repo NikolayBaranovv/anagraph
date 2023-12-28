@@ -21,9 +21,15 @@ export interface VerticalFilling {
     color: string;
 }
 
+export interface BottomStatus {
+    intervals: Bounds[];
+    color: string;
+}
+
 export interface ChartInfo {
     settings: ChartSettings;
     xBounds: Bounds;
     lines: Map<Id, LineInfo>;
     verticalFillings: Map<Id, VerticalFilling>;
+    bottomStatuses: Map<Id, BottomStatus>;
 }

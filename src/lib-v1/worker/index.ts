@@ -24,12 +24,12 @@ let framesDrawn = 0;
 function drawLatestInstructions() {
     if (!canvas || !ctx) return;
 
-    console.groupCollapsed("draw");
+    // console.groupCollapsed("draw");
     for (const instruction of latestInstructions) {
-        console.log(instruction.type);
+        // console.log(instruction.type);
         drawInstruction(instruction, ctx, xBounds, devicePixelRatio);
     }
-    console.groupEnd();
+    // console.groupEnd();
 }
 
 function setInstructions(instructions: DrawingInstruction[]) {

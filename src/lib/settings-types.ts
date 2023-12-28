@@ -1,4 +1,4 @@
-import { Bounds, divSize, mulRect, Rect, Size } from "./basic-types";
+import { Bounds } from "./basic-types";
 
 export interface LabelSettings {
     color: string;
@@ -38,6 +38,12 @@ export interface ChartSettings {
         lines: GridLineSettings;
     };
     topGap: number;
+    bottomStatuses: {
+        topMargin: number;
+        bottomMargin: number;
+        eachHeight: number;
+        gap: number;
+    };
 }
 
 export const defaultChartSettings: ChartSettings = {
@@ -73,18 +79,10 @@ export const defaultChartSettings: ChartSettings = {
         },
     },
     topGap: 10,
+    bottomStatuses: {
+        topMargin: 10,
+        bottomMargin: 10,
+        eachHeight: 10,
+        gap: 3,
+    },
 };
-
-export function calcGridAreaLpx(canvasSizeLpx: Size, chartSettings: ChartSettings): Rect {
-    return {
-        x: chartSettings.legend.y.width,
-        y: chartSettings.topGap,
-        width: canvasSizeLpx.width - chartSettings.legend.y.width,
-        height: canvasSizeLpx.height - chartSettings.topGap - chartSettings.legend.x.height,
-    };
-}
-
-export function calcGridAreaCpx(canvasSizeCpx: Size, chartSettings: ChartSettings, devicePixelRatio: number): Rect {
-    const lpx = calcGridAreaLpx(divSize(canvasSizeCpx, devicePixelRatio), chartSettings);
-    return mulRect(lpx, devicePixelRatio);
-}

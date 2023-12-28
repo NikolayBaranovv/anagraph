@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { complexLinesJSON } from "./complex-data.no-prettier";
 import { BoundsManager, Chart, Line, VerticalFilling } from "../lib";
+import { BottomStatus } from "../lib/BottomStatus";
 
 export default {
     title: "Anagraph/Complex Examples",
@@ -25,11 +26,14 @@ export const Z52467: Story = {
                     },
                 }}
             >
+                {complexLinesData.lines.map((data: any, i: number) => (
+                    <Line key={i} color={data.color} points={data.data} lineWidth={2} yBounds={[0, 100]} />
+                ))}
                 {complexLinesData.markings.map((marking: any, i: number) => (
                     <VerticalFilling key={i} intervals={marking.data} color={marking.color} />
                 ))}
-                {complexLinesData.lines.map((data: any, i: number) => (
-                    <Line key={i} color={data.color} points={data.data} lineWidth={2} yBounds={[0, 100]} />
+                {complexLinesData.bottomMarkings.map((marking: any, i: number) => (
+                    <BottomStatus key={i} intervals={marking.data} color={marking.color} />
                 ))}
             </Chart>
         </BoundsManager>

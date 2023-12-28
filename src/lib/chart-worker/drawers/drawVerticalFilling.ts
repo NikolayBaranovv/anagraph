@@ -19,14 +19,12 @@ export function drawVerticalFilling(
 
     ctx.fillStyle = color;
 
-    const clipPath = new Path2D();
-    clipPath.rect(plotAreaX, plotAreaY, plotAreaW, plotAreaH);
-    ctx.clip(clipPath);
-
     for (const [x1, x2] of intervals) {
         const t1 = Math.round((x1 - xMin) * gridWidthDivXBounds + plotAreaX);
         const t2 = Math.round((x2 - xMin) * gridWidthDivXBounds + plotAreaX);
 
+        // FIXME: optimize this by skipping drawing if the filling is outside of the plot area
+        // FIXME #2: maybe optimize this by using binary search to find the first interval that is inside the plot area
         ctx.fillRect(t1, plotAreaY, t2 - t1, plotAreaH);
     }
 }
