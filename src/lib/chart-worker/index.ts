@@ -5,11 +5,33 @@ import {
     isEditObjectMessage,
     isRemoveObjectMessage,
     MainToChartWorkerMessage,
+    statsReportMessage,
 } from "./messages";
 import { assertNever } from "../utils";
 import { defaultChartSettings } from "../settings-types";
 import { BottomStatus, ChartInfo, DrawContext, Id, LineInfo, VerticalFilling } from "./worker-types";
 import { drawChart } from "./drawers/drawChart";
+
+function handleObjectMessages<K extends string, O extends object>(
+    baseType: K,
+    msg: EditObjectMessages<K, O>,
+    map: Map<Id, O>,
+): boolean {
+    if (isAddObjectMessage(baseType, msg)) {
+        map.set(msg.id, msg.attrs);
+        return true;
+    } else if (isChangeObjectMessage(baseType, msg)) {
+        const obj = map.get(msg.id);
+        if (obj) {
+            map.set(msg.id, { ...obj, ...msg.attrs });
+            return true;
+        }
+    } else if (isRemoveObjectMessage(baseType, msg)) {
+        map.delete(msg.id);
+        return true;
+    }
+    return false;
+}
 
 export function startChartWorker() {
     let drawContext: DrawContext | null = null;
@@ -22,6 +44,8 @@ export function startChartWorker() {
         bottomStatuses: new Map<Id, BottomStatus>(),
     };
 
+    let framesDrawn = 0;
+    let lastDrawTime = 0;
     let drawPlanned = false;
     function planRedraw() {
         if (drawPlanned) return;
@@ -30,34 +54,19 @@ export function startChartWorker() {
         requestAnimationFrame(() => {
             if (drawContext) {
                 drawChart(drawContext, chartInfo);
+                framesDrawn++;
             }
-            // framesDrawn++;
             drawPlanned = false;
         });
     }
 
-    function handleObjectMessages<K extends string, O extends object>(
-        baseType: K,
-        msg: EditObjectMessages<K, O>,
-        map: Map<Id, O>,
-    ): boolean {
-        if (isAddObjectMessage(baseType, msg)) {
-            map.set(msg.id, msg.attrs);
-            planRedraw();
-        } else if (isChangeObjectMessage(baseType, msg)) {
-            const obj = map.get(msg.id);
-            if (obj) {
-                map.set(msg.id, { ...obj, ...msg.attrs });
-                planRedraw();
-            }
-        } else if (isRemoveObjectMessage(baseType, msg)) {
-            map.delete(msg.id);
-            planRedraw();
-        } else {
-            return false;
-        }
-        return true;
-    }
+    setInterval(() => {
+        const now = new Date().getTime();
+        const fps = (framesDrawn / (now - lastDrawTime)) * 1e3;
+        lastDrawTime = now;
+        framesDrawn = 0;
+        postMessage(statsReportMessage(fps));
+    }, 1e3);
 
     addEventListener("message", (msg: MessageEvent<MainToChartWorkerMessage>) => {
         switch (msg.data.type) {
@@ -104,15 +113,21 @@ export function startChartWorker() {
         }
 
         if (isEditObjectMessage("Line", msg.data)) {
-            handleObjectMessages("Line", msg.data, chartInfo.lines);
+            if (handleObjectMessages("Line", msg.data, chartInfo.lines)) {
+                planRedraw();
+            }
             return;
         }
         if (isEditObjectMessage("VerticalFilling", msg.data)) {
-            handleObjectMessages("VerticalFilling", msg.data, chartInfo.verticalFillings);
+            if (handleObjectMessages("VerticalFilling", msg.data, chartInfo.verticalFillings)) {
+                planRedraw();
+            }
             return;
         }
         if (isEditObjectMessage("BottomStatus", msg.data)) {
-            handleObjectMessages("BottomStatus", msg.data, chartInfo.bottomStatuses);
+            if (handleObjectMessages("BottomStatus", msg.data, chartInfo.bottomStatuses)) {
+                planRedraw();
+            }
             return;
         }
 

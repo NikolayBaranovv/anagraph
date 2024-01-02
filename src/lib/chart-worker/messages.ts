@@ -11,6 +11,17 @@ export type MainToChartWorkerMessage =
     | EditObjectMessages<"VerticalFilling", VerticalFilling>
     | EditObjectMessages<"BottomStatus", BottomStatus>;
 
+export type WorkerToMainMessage = StatsReportMessage;
+
+interface StatsReportMessage {
+    type: "statsReport";
+    fps: number;
+}
+
+export function statsReportMessage(fps: number): StatsReportMessage {
+    return { type: "statsReport", fps };
+}
+
 interface SetCanvasMessage {
     type: "setCanvas";
     canvas?: OffscreenCanvas;

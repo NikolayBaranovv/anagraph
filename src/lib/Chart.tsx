@@ -16,6 +16,7 @@ import {
     setCanvasSizeMessage,
     setChartSettingsMessage,
     setXBoundsAndRedrawMessage,
+    WorkerToMainMessage,
 } from "./chart-worker/messages";
 import { useUnmount } from "react-use";
 import { useBoundsContext } from "./BoundsManager";
@@ -26,6 +27,7 @@ import { divSize, Size } from "./basic-types";
 import { ChartSettings, defaultChartSettings } from "./settings-types";
 import { BottomStatus, Id, LineInfo, VerticalFilling } from "./chart-worker/worker-types";
 import { calcManipulationAreaLpx } from "./layout-utils";
+import { assertNever } from "./utils";
 
 interface ChartContextType {
     addLine(id: Id, lineInfo: LineInfo): void;
@@ -146,12 +148,18 @@ export function Chart(props: ChartProps) {
         return () => removeXBoundsCallback(sendRedraw.current);
     }, []);
 
-    const sendMessage = useCallback(
-        (message: MainToChartWorkerMessage) => {
-            worker.postMessage(message);
-        },
-        [worker],
-    );
+    const sendMessage = useCallback((message: MainToChartWorkerMessage) => worker.postMessage(message), [worker]);
+
+    const [fps, setFps] = useState(0);
+    useEffect(() => {
+        const onMessage = (event: MessageEvent<WorkerToMainMessage>) => {
+            if (event.data.type === "statsReport") {
+                setFps(event.data.fps);
+            }
+        };
+        worker.addEventListener("message", onMessage);
+        return () => worker.removeEventListener("message", onMessage);
+    }, [worker]);
 
     const chartContextValue = useMemo<ChartContextType>(
         () => ({
@@ -190,6 +198,24 @@ export function Chart(props: ChartProps) {
                 }}
             />
             <ChartContext.Provider value={chartContextValue}>{props.children}</ChartContext.Provider>
+
+            {fps !== 0 ? (
+                <div
+                    style={{
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                        padding: "3px 6px",
+                        background: "rgba(0,0,0,0.6)",
+                        zIndex: 999,
+                        color: "#fff",
+                        borderRadius: "4px",
+                        fontFamily: "monospace",
+                    }}
+                >
+                    FPS: {fps.toFixed(1)}
+                </div>
+            ) : null}
         </div>
     );
 }

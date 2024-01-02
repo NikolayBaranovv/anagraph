@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import { BoundsManager, Chart, Line } from "../lib";
 
 export default {
-    title: "Anagraph/Chart",
+    title: "Anagraph V2/Chart",
     component: Chart,
 } satisfies Meta<typeof Chart>;
 
