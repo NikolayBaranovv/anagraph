@@ -10,9 +10,6 @@ type Story = StoryObj<typeof Chart>;
 
 export const Simple: Story = {
     args: {
-        // @ts-ignore
-        _chartWorker: true,
-
         settings: {
             background: "#ffffd0",
             grid: {

@@ -11,9 +11,6 @@ type Story = StoryObj<typeof Line>;
 
 export const Simple: Story = {
     args: {
-        // @ts-ignore
-        _chartWorker: true,
-
         color: "#3b73c4",
         lineWidth: 3,
         points: [
@@ -43,9 +40,6 @@ export const Simple: Story = {
 
 export const MonthOfData: Story = {
     args: {
-        // @ts-ignore
-        _chartWorker: true,
-
         color: "#3b73c4",
         lineWidth: 3,
         points: randomDataForMonth,

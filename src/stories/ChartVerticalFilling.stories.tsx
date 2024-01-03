@@ -20,9 +20,6 @@ type Story = StoryObj<typeof VerticalFilling>;
 
 export const Simple = {
     args: {
-        // @ts-ignore
-        _chartWorker: true,
-
         intervals: [
             [ts(2023, 0, 1), ts(2023, 0, 2)],
             [ts(2023, 0, 3), ts(2023, 0, 4)],
@@ -34,9 +31,6 @@ export const Simple = {
 
 export const Overlapping: Story = {
     args: {
-        // @ts-ignore
-        _chartWorker: true,
-
         intervals: [
             [ts(2023, 0, 1, 12), ts(2023, 0, 2, 12)],
             [ts(2023, 0, 3, 12), ts(2023, 0, 4, 12)],

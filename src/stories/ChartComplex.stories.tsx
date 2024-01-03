@@ -12,9 +12,6 @@ type Story = StoryObj;
 const complexLinesData = JSON.parse(complexLinesJSON);
 
 export const Z52467: Story = {
-    args: {
-        _chartWorker: true,
-    },
     render: () => (
         <BoundsManager initialXBounds={complexLinesData.viewport} xBoundsLimit={complexLinesData.viewport}>
             {[0, 1, 2].map((key) => (
