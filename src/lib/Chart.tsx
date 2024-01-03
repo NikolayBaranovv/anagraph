@@ -66,7 +66,7 @@ interface ChartProps {
     style?: CSSProperties;
     settings?: DeepPartial<ChartSettings>;
 
-    children?: ReactElement[];
+    children?: ReactElement | ReactElement[];
 }
 
 function overwriteMerge<T>(_: T[], sourceArray: T[]): T[] {
@@ -75,7 +75,7 @@ function overwriteMerge<T>(_: T[], sourceArray: T[]): T[] {
 
 function useWorker() {
     const workerCreator = useWorkerCreator();
-    const worker = useMemo(() => workerCreator(), [workerCreator]);
+    const worker = useMemo(() => workerCreator(), []);
     useUnmount(() => worker.terminate());
     return worker;
 }
