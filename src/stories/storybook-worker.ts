@@ -1,7 +1,7 @@
 import "regenerator-runtime/runtime";
-import { startChartWorker } from "../lib";
+import { startWorker } from "../lib";
 
-startChartWorker();
+startWorker();
 
 interface AnagraphChartWorker extends Worker {
     new (): Worker;

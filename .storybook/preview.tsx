@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react";
-import AnagraphChartWorker from "../src/stories/storybook-chart-worker";
+import AnagraphChartWorker from "../src/stories/storybook-worker";
 import { WorkerCreatorProvider } from "../src/lib";
 
 const preview: Preview = {

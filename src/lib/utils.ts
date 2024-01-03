@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Bounds, LineData } from "./basic-types";
-import { Id } from "./chart-worker/worker-types";
+import { Id } from "./worker/worker-types";
 
 export function scale(value: number, oldBounds: Bounds, newBounds: Bounds): number {
     return ((value - oldBounds[0]) / (oldBounds[1] - oldBounds[0])) * (newBounds[1] - newBounds[0]) + newBounds[0];

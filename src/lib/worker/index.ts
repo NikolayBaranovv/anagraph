@@ -4,7 +4,7 @@ import {
     isChangeObjectMessage,
     isEditObjectMessage,
     isRemoveObjectMessage,
-    MainToChartWorkerMessage,
+    MainToWorkerMessage,
     statsReportMessage,
 } from "./messages";
 import { assertNever } from "../utils";
@@ -33,7 +33,7 @@ function handleObjectMessages<K extends string, O extends object>(
     return false;
 }
 
-export function startChartWorker() {
+export function startWorker() {
     let drawContext: DrawContext | null = null;
 
     const chartInfo: ChartInfo = {
@@ -68,7 +68,7 @@ export function startChartWorker() {
         postMessage(statsReportMessage(fps));
     }, 1e3);
 
-    addEventListener("message", (msg: MessageEvent<MainToChartWorkerMessage>) => {
+    addEventListener("message", (msg: MessageEvent<MainToWorkerMessage>) => {
         switch (msg.data.type) {
             case "setCanvas": {
                 const { canvas, devicePixelRatio } = msg.data;

@@ -1,7 +1,5 @@
-import { VerticalFilling } from "./VerticalFilling";
-
 export { WorkerCreatorProvider } from "./WorkerCreatorContext";
-export { startChartWorker } from "./chart-worker";
+export { startWorker } from "./worker";
 export { Chart } from "./Chart";
 export { Line } from "./Line";
 export type { Rect } from "./basic-types";

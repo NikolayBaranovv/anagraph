@@ -22,7 +22,7 @@ const config: StorybookConfig = {
                 ...config.module,
                 rules: [
                     {
-                        test: /storybook-(chart-)?worker\.ts$/,
+                        test: /storybook-worker\.ts$/,
                         use: ["worker-loader"],
                     },
                     ...(config.module?.rules ?? []),

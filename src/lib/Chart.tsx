@@ -11,13 +11,13 @@ import React, {
 } from "react";
 import { useWorkerCreator } from "./WorkerCreatorContext";
 import {
-    MainToChartWorkerMessage,
+    MainToWorkerMessage,
     setCanvasMessage,
     setCanvasSizeMessage,
     setChartSettingsMessage,
     setXBoundsAndRedrawMessage,
     WorkerToMainMessage,
-} from "./chart-worker/messages";
+} from "./worker/messages";
 import { useUnmount } from "react-use";
 import { useBoundsContext } from "./BoundsManager";
 import { Manipulator } from "./Manipulator";
@@ -25,7 +25,7 @@ import { DeepPartial, noop } from "ts-essentials";
 import deepmerge from "deepmerge";
 import { divSize, Size } from "./basic-types";
 import { ChartSettings, defaultChartSettings } from "./settings-types";
-import { BottomStatus, Id, LineInfo, VerticalFilling } from "./chart-worker/worker-types";
+import { BottomStatus, Id, LineInfo, VerticalFilling } from "./worker/worker-types";
 import { calcManipulationAreaLpx } from "./layout-utils";
 import { assertNever } from "./utils";
 
@@ -148,7 +148,7 @@ export function Chart(props: ChartProps) {
         return () => removeXBoundsCallback(sendRedraw.current);
     }, []);
 
-    const sendMessage = useCallback((message: MainToChartWorkerMessage) => worker.postMessage(message), [worker]);
+    const sendMessage = useCallback((message: MainToWorkerMessage) => worker.postMessage(message), [worker]);
 
     const [fps, setFps] = useState(0);
     useEffect(() => {

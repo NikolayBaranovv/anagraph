@@ -2,7 +2,7 @@ import { Bounds } from "../basic-types";
 import { ChartSettings } from "../settings-types";
 import { BottomStatus, Id, LineInfo, VerticalFilling } from "./worker-types";
 
-export type MainToChartWorkerMessage =
+export type MainToWorkerMessage =
     | SetCanvasMessage
     | SetCanvasSizeMessage
     | SetXBoundsAndRedrawMessage
@@ -101,19 +101,19 @@ export function isRemoveObjectMessage<K extends string, O extends object>(
 }
 export function isEditObjectMessage(
     baseType: "Line",
-    msg: MainToChartWorkerMessage,
+    msg: MainToWorkerMessage,
 ): msg is EditObjectMessages<"Line", LineInfo>;
 export function isEditObjectMessage(
     baseType: "VerticalFilling",
-    msg: MainToChartWorkerMessage,
+    msg: MainToWorkerMessage,
 ): msg is EditObjectMessages<"VerticalFilling", VerticalFilling>;
 export function isEditObjectMessage(
     baseType: "BottomStatus",
-    msg: MainToChartWorkerMessage,
+    msg: MainToWorkerMessage,
 ): msg is EditObjectMessages<"BottomStatus", VerticalFilling>;
 export function isEditObjectMessage<K extends string, O extends object>(
     baseType: K,
-    msg: MainToChartWorkerMessage,
+    msg: MainToWorkerMessage,
 ): boolean {
     const editMsg = msg as EditObjectMessages<K, O>;
     return (
