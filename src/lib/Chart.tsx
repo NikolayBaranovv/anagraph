@@ -27,7 +27,6 @@ import { divSize, Size } from "./basic-types";
 import { ChartSettings, defaultChartSettings } from "./settings-types";
 import { BottomStatus, Id, LineInfo, VerticalFilling } from "./worker/worker-types";
 import { calcManipulationAreaLpx } from "./layout-utils";
-import { assertNever } from "./utils";
 
 interface ChartContextType {
     addLine(id: Id, lineInfo: LineInfo): void;

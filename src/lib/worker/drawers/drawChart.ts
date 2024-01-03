@@ -28,10 +28,14 @@ export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
         ctx.fillRect(0, 0, width, height);
     }
 
+    const xGridArea = calcXGridAreaCpx({ width, height }, settings, dpr);
     const yGridArea: Rect = calcYGridAreaCpx({ width, height }, settings, dpr, chartInfo.bottomStatuses.size);
 
+    if (settings.grid.background != null) {
+        ctx.fillStyle = settings.grid.background;
+        ctx.fillRect(xGridArea.x, xGridArea.y, xGridArea.width, xGridArea.height);
+    }
     if (settings.grid.x.draw) {
-        const xGridArea = calcXGridAreaCpx({ width, height }, settings, dpr);
         drawTimeXGrid(drawContext, settings.grid.lines, settings.legend.labels, xBounds, xGridArea);
     }
     if (settings.grid.y.draw) {

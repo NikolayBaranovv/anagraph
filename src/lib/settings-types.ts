@@ -35,6 +35,7 @@ export interface ChartSettings {
     grid: {
         x: { draw: boolean };
         y: { draw: boolean; bounds: Bounds };
+        background: string | null;
         lines: GridLineSettings;
     };
     topGap: number;
@@ -51,8 +52,8 @@ export const defaultChartSettings: ChartSettings = {
     legend: {
         x: {
             draw: true,
-            height: 40,
-            gap: 3,
+            height: 42,
+            gap: 6,
         },
         y: {
             draw: true,
@@ -73,6 +74,7 @@ export const defaultChartSettings: ChartSettings = {
     grid: {
         x: { draw: true },
         y: { draw: true, bounds: [0, 1] },
+        background: null,
         lines: {
             color: "#cccccc",
             lineWidth: 1,

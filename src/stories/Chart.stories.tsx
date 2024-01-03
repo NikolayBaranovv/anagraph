@@ -11,8 +11,8 @@ type Story = StoryObj<typeof Chart>;
 export const Simple: Story = {
     args: {
         settings: {
-            background: "#ffffd0",
             grid: {
+                background: "#ffffd0",
                 y: { bounds: [-1, 10] },
             },
         },
