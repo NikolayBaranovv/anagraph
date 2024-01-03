@@ -37,6 +37,11 @@ export interface ChartSettings {
         y: { draw: boolean; bounds: Bounds };
         background: string | null;
         lines: GridLineSettings;
+        outline: {
+            draw: boolean;
+            lineWidth: number;
+            color: string;
+        };
     };
     topGap: number;
     bottomStatuses: {
@@ -76,6 +81,11 @@ export const defaultChartSettings: ChartSettings = {
         y: { draw: true, bounds: [0, 1] },
         background: null,
         lines: {
+            color: "#cccccc",
+            lineWidth: 1,
+        },
+        outline: {
+            draw: true,
             color: "#cccccc",
             lineWidth: 1,
         },

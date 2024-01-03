@@ -42,6 +42,12 @@ export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
         drawYGrid(drawContext, settings.legend.y.minHeight, settings.grid.lines, settings.grid.y.bounds, yGridArea);
     }
 
+    if (settings.grid.outline.draw) {
+        ctx.strokeStyle = settings.grid.outline.color;
+        ctx.lineWidth = settings.grid.outline.lineWidth;
+        ctx.strokeRect(xGridArea.x + 0.5, xGridArea.y + 0.5, xGridArea.width, xGridArea.height);
+    }
+
     if (settings.legend.x.draw) {
         const xLegendArea = calcXLegendAreaCpx({ width, height }, settings, dpr);
         drawTimeXLegend(drawContext, settings.legend, chartInfo.xBounds, xLegendArea);
