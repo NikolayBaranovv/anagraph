@@ -15,14 +15,13 @@ export function drawYLegend(drawContext: DrawContext, legendSettings: LegendSett
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
 
+    const bulletRadiusDpr = legendSettings.bulletRadius * dpr;
+
     for (const y of generateTicks(yBounds, drawArea.height, legendSettings.y.minHeight)) {
         const ypx = Math.round(scale(y, yBounds, [drawArea.y + drawArea.height, drawArea.y]));
-        ctx.fillRect(
-            drawArea.x - legendSettings.bulletRadius * dpr,
-            ypx - legendSettings.bulletRadius * dpr,
-            legendSettings.bulletRadius * dpr * 2,
-            legendSettings.bulletRadius * dpr * 2,
-        );
+        ctx.beginPath();
+        ctx.ellipse(drawArea.x, ypx, bulletRadiusDpr, bulletRadiusDpr, 0, 0, 2 * Math.PI);
+        ctx.fill();
 
         const text = yLabel(y);
         const x = drawArea.x - legendSettings.y.gap * dpr;

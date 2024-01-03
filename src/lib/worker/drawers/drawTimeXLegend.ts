@@ -20,6 +20,7 @@ export function drawTimeXLegend(
     }`;
 
     const sampleSize = ctx.measureText("00.00.0000");
+    const bulletRadiusDpr = legendSettings.bulletRadius * dpr;
 
     let prevX: number | null = null;
 
@@ -29,12 +30,9 @@ export function drawTimeXLegend(
         (sampleSize.width / xLegendArea.width) * (xBounds[1] - xBounds[0]) * 1.1,
     )) {
         const xpx = Math.round(scale(x, xBounds, [xLegendArea.x, xLegendArea.x + xLegendArea.width]));
-        ctx.fillRect(
-            xpx - legendSettings.bulletRadius * dpr,
-            xLegendArea.y - legendSettings.bulletRadius * dpr,
-            legendSettings.bulletRadius * dpr * 2,
-            legendSettings.bulletRadius * dpr * 2,
-        );
+        ctx.beginPath();
+        ctx.ellipse(xpx, xLegendArea.y, bulletRadiusDpr, bulletRadiusDpr, 0, 0, 2 * Math.PI);
+        ctx.fill();
 
         const text = timeXLabel(x, prevX);
         prevX = x;

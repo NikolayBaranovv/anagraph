@@ -62,7 +62,7 @@ export const defaultChartSettings: ChartSettings = {
             minHeight: 48,
         },
 
-        bulletRadius: 3,
+        bulletRadius: 2,
         labels: {
             color: "#666699",
 
