@@ -21,7 +21,7 @@ export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
     const { canvas, ctx, devicePixelRatio: dpr } = drawContext;
     const { width, height } = canvas;
 
-    if (settings.background == null) {
+    if (settings.background == null || settings.background === "transparent") {
         ctx.clearRect(0, 0, width, height);
     } else {
         ctx.fillStyle = settings.background;
@@ -31,7 +31,7 @@ export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
     const xGridArea = calcXGridAreaCpx({ width, height }, settings, dpr);
     const yGridArea: Rect = calcYGridAreaCpx({ width, height }, settings, dpr, chartInfo.bottomStatuses.size);
 
-    if (settings.grid.background != null) {
+    if (settings.grid.background != null && settings.grid.background !== "transparent") {
         ctx.fillStyle = settings.grid.background;
         ctx.fillRect(xGridArea.x, xGridArea.y, xGridArea.width, xGridArea.height);
     }
@@ -45,7 +45,12 @@ export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
     if (settings.grid.outline.draw) {
         ctx.strokeStyle = settings.grid.outline.color;
         ctx.lineWidth = settings.grid.outline.lineWidth;
-        ctx.strokeRect(xGridArea.x + 0.5, xGridArea.y + 0.5, xGridArea.width, xGridArea.height);
+        ctx.strokeRect(
+            Math.floor(xGridArea.x) + 0.5,
+            Math.floor(xGridArea.y) + 0.5,
+            Math.ceil(xGridArea.width),
+            Math.ceil(xGridArea.height),
+        );
     }
 
     if (settings.legend.x.draw) {

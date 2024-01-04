@@ -68,7 +68,7 @@ interface ChartProps {
     children?: ReactElement | ReactElement[];
 }
 
-function overwriteMerge<T>(_: T[], sourceArray: T[]): T[] {
+function arrayMergeOverwrite<T>(_: T[], sourceArray: T[]): T[] {
     return sourceArray;
 }
 
@@ -128,7 +128,7 @@ export function Chart(props: ChartProps) {
     const effectiveSettings = useMemo(
         () =>
             deepmerge<ChartSettings, DeepPartial<ChartSettings>>(defaultChartSettings, props.settings ?? {}, {
-                arrayMerge: overwriteMerge,
+                arrayMerge: arrayMergeOverwrite,
             }),
         [props.settings],
     );
@@ -136,7 +136,7 @@ export function Chart(props: ChartProps) {
     useEffect(() => {
         worker.postMessage(setChartSettingsMessage(effectiveSettings));
         sendRedraw.current();
-    }, [worker]);
+    }, [worker, effectiveSettings]);
 
     const { getCurrentXBounds, addXBoundsCallback, removeXBoundsCallback } = useBoundsContext();
     const sendRedraw = useRef(() => {
