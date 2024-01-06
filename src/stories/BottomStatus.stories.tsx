@@ -1,5 +1,4 @@
-import { BottomStatus } from "../lib/BottomStatus";
-import { BoundsManager, Chart } from "../lib";
+import { BottomStatus, BoundsManager, Chart } from "../lib";
 import { ts } from "./utils";
 import { Meta, StoryObj } from "@storybook/react";
 

@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { complexLinesJSON } from "./complex-data.no-prettier";
-import { BoundsManager, Chart, Line, VerticalFilling } from "../lib";
-import { BottomStatus } from "../lib/BottomStatus";
+import { BottomStatus, BoundsManager, Chart, Line, VerticalFilling } from "../lib";
 
 export default {
     title: "Anagraph V2/Complex Examples",

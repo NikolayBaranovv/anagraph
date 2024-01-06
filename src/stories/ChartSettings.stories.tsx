@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { ChartSettings, defaultChartSettings } from "../lib/settings-types";
-import { BoundsManager, Chart, Line } from "../lib";
+import { BoundsManager, Chart, ChartSettings, defaultChartSettings, Line } from "../lib";
 import { DeepFlatten, flatten, unflatten } from "./flatten-utils";
 
 type FlatChartSettings = DeepFlatten<ChartSettings>;

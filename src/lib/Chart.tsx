@@ -2,6 +2,7 @@ import React, {
     createContext,
     CSSProperties,
     ReactElement,
+    ReactNode,
     useCallback,
     useContext,
     useEffect,
@@ -65,7 +66,7 @@ interface ChartProps {
     style?: CSSProperties;
     settings?: DeepPartial<ChartSettings>;
 
-    children?: ReactElement | ReactElement[];
+    children?: ReactNode | ReactNode[];
 }
 
 function arrayMergeOverwrite<T>(_: T[], sourceArray: T[]): T[] {
