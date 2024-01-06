@@ -73,7 +73,7 @@ export function startWorker() {
             case "setCanvas": {
                 const { canvas, devicePixelRatio } = msg.data;
                 if (canvas) {
-                    const ctx = canvas.getContext("2d", { desynchronized: true, alpha: true });
+                    const ctx = canvas.getContext("2d", { desynchronized: true });
                     if (ctx) {
                         drawContext = {
                             canvas,
