@@ -30,6 +30,7 @@ export interface LegendSettings {
 }
 
 export interface ChartSettings {
+    _verbose: boolean;
     background: string | null;
     legend: LegendSettings;
     grid: {
@@ -53,6 +54,7 @@ export interface ChartSettings {
 }
 
 export const defaultChartSettings: ChartSettings = {
+    _verbose: false,
     background: null,
     legend: {
         x: {
