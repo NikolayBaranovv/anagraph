@@ -21,7 +21,7 @@ export function BottomStatus(props: BottomStatusProps) {
             color,
         });
         return () => chartContext.removeBottomStatus(id);
-    });
+    }, []);
 
     useUpdateEffect(() => {
         chartContext.changeBottomStatus(id, { intervals, color });

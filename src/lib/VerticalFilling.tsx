@@ -21,7 +21,7 @@ export function VerticalFilling(props: VerticalFillingProps) {
             color,
         });
         return () => chartContext.removeVerticalFilling(id);
-    });
+    }, []);
 
     useUpdateEffect(() => {
         chartContext.changeVerticalFilling(id, { intervals, color });
