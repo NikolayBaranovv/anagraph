@@ -69,6 +69,13 @@ export function startWorker() {
     }, 1e3);
 
     addEventListener("message", (msg: MessageEvent<MainToWorkerMessage>) => {
+        if (chartInfo.settings._verbose) {
+            console.log(
+                "WORKER MSG",
+                msg.data.type,
+                msg.data.type.startsWith("change") ? Object.keys((msg.data as unknown as any).attrs ?? {}) : undefined,
+            );
+        }
         switch (msg.data.type) {
             case "setCanvas": {
                 const { canvas, devicePixelRatio } = msg.data;

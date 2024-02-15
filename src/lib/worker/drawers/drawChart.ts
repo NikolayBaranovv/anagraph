@@ -11,7 +11,7 @@ import { calcBottomStatusesAreaCpx, calcXGridAreaCpx, calcXLegendAreaCpx, calcYG
 
 export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
     if (chartInfo.settings._verbose) {
-        console.group("drawChart");
+        console.groupCollapsed("drawChart", chartInfo.bottomStatuses.size);
         console.log("drawContext.canvas.height", drawContext.canvas.height);
         console.log("chartInfo.lines.size", chartInfo.lines.size);
         console.log("chartInfo.verticalFillings.size", chartInfo.verticalFillings.size);
