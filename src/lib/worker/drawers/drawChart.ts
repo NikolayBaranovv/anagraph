@@ -10,6 +10,7 @@ import { drawBottomStatus, drawBottomStatusYLegend } from "./drawBottomStatus";
 import { calcBottomStatusesAreaCpx, calcXGridAreaCpx, calcXLegendAreaCpx, calcYGridAreaCpx } from "../../layout-utils";
 
 export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
+    const t1 = new Date().getTime();
     if (chartInfo.settings._verbose) {
         console.groupCollapsed("drawChart", chartInfo.bottomStatuses.size);
         console.log("drawContext.canvas.height", drawContext.canvas.height);
@@ -107,4 +108,9 @@ export function drawChart(drawContext: DrawContext, chartInfo: ChartInfo) {
         y += (settings.bottomStatuses.eachHeight + settings.bottomStatuses.gap) * dpr;
     }
     ctx.restore();
+
+    if (chartInfo.settings._verbose) {
+        const t2 = new Date().getTime();
+        console.log("WORKER drawn in ms:", t2 - t1);
+    }
 }

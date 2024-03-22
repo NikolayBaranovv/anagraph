@@ -4,6 +4,7 @@ import React, {
     ReactNode,
     useCallback,
     useContext,
+    useEffect,
     useMemo,
     useRef,
     useState,
@@ -81,6 +82,11 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
         },
         [setFinalXBounds, callXBoundsCallbacks],
     );
+
+    useEffect(() => {
+        setFinalXBounds(initialXBounds);
+        callXBoundsCallbacks(initialXBounds);
+    }, [initialXBounds[0], initialXBounds[1]]);
 
     const contextValue: BoundsContextType = {
         xBoundsLimit,
