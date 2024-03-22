@@ -84,6 +84,7 @@ export function BoundsManager(props: BoundsManagerProps): ReactElement {
     );
 
     useEffect(() => {
+        finalXBoundsRef.current = initialXBounds;
         setFinalXBounds(initialXBounds);
         callXBoundsCallbacks(initialXBounds);
     }, [initialXBounds[0], initialXBounds[1]]);
