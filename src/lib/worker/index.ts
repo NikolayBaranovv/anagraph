@@ -73,7 +73,11 @@ export function startWorker() {
             console.log(
                 "WORKER MSG",
                 msg.data.type,
-                msg.data.type.startsWith("change") ? Object.keys((msg.data as unknown as any).attrs ?? {}) : undefined,
+                msg.data.type.startsWith("change")
+                    ? Object.keys((msg.data as unknown as any).attrs ?? {})
+                    : msg.data.type === "setXBoundsAndRedraw"
+                    ? msg.data
+                    : undefined,
             );
         }
         switch (msg.data.type) {
