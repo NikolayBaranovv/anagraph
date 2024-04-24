@@ -5,14 +5,18 @@ import { Bounds } from "./basic-types";
 
 interface ManipulatorProps {
     style: CSSProperties;
+    onCursorMove?: (x: number) => void;
 }
 
 export function Manipulator(props: ManipulatorProps) {
+    const { onCursorMove } = props;
     const { xBoundsLimit, settledXBounds, onManipulation, onManipulationEnd } = useBoundsContext();
 
     const [glass, setGlass] = useState<HTMLDivElement | null>(null);
 
-    useDragAndZoom(glass, settledXBounds, onManipulation, onManipulationEnd, { boundsLimit: xBoundsLimit });
+    useDragAndZoom(glass, settledXBounds, onManipulation, onManipulationEnd, onCursorMove, {
+        boundsLimit: xBoundsLimit,
+    });
 
     return (
         <div

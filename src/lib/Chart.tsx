@@ -67,6 +67,8 @@ interface ChartProps {
     settings?: DeepPartial<ChartSettings>;
 
     children?: ReactNode | ReactNode[];
+
+    onCursorMove?: (x: number) => void;
 }
 
 function arrayMergeOverwrite<T>(_: T[], sourceArray: T[]): T[] {
@@ -196,6 +198,7 @@ export function Chart(props: ChartProps) {
                     width: gridAreaLpx.width,
                     height: gridAreaLpx.height,
                 }}
+                onCursorMove={props.onCursorMove}
             />
             <ChartContext.Provider value={chartContextValue}>{props.children}</ChartContext.Provider>
 
