@@ -18,7 +18,7 @@ import {
     setXBoundsAndRedrawMessage,
     WorkerToMainMessage,
 } from "./worker/messages";
-import { useUnmount } from "react-use";
+import { useDeepCompareEffect, useUnmount } from "react-use";
 import { useBoundsContext } from "./BoundsManager";
 import { Manipulator } from "./Manipulator";
 import { DeepPartial, noop } from "ts-essentials";
@@ -135,7 +135,7 @@ export function Chart(props: ChartProps) {
         [props.settings],
     );
 
-    useEffect(() => {
+    useDeepCompareEffect(() => {
         worker.postMessage(setChartSettingsMessage(effectiveSettings));
         sendRedraw.current();
     }, [worker, effectiveSettings]);
