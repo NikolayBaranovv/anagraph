@@ -2,7 +2,7 @@ import { Bounds } from "./basic-types";
 import { useId } from "./utils";
 import { useChartContext } from "./Chart";
 import { useEffect } from "react";
-import { useUpdateEffect } from "react-use";
+import { useFirstMountState, useShallowCompareEffect, useUpdateEffect } from "react-use";
 
 interface BottomStatusProps {
     intervals: Bounds[];
@@ -24,8 +24,15 @@ export function BottomStatus(props: BottomStatusProps) {
     }, []);
 
     useUpdateEffect(() => {
-        chartContext.changeBottomStatus(id, { intervals, color });
-    }, [intervals, color]);
+        chartContext.changeBottomStatus(id, { color });
+    }, [color]);
+
+    const isFirstMount = useFirstMountState();
+    useShallowCompareEffect(() => {
+        if (!isFirstMount) {
+            chartContext.changeBottomStatus(id, { intervals });
+        }
+    }, [intervals]);
 
     return null;
 }

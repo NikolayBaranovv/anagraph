@@ -2,7 +2,7 @@ import { Bounds } from "./basic-types";
 import { useChartContext } from "./Chart";
 import { useId } from "./utils";
 import { useEffect } from "react";
-import { useUpdateEffect } from "react-use";
+import { useFirstMountState, useShallowCompareEffect, useUpdateEffect } from "react-use";
 
 interface VerticalFillingProps {
     intervals: Bounds[];
@@ -24,8 +24,15 @@ export function VerticalFilling(props: VerticalFillingProps) {
     }, []);
 
     useUpdateEffect(() => {
-        chartContext.changeVerticalFilling(id, { intervals, color });
-    }, [intervals, color]);
+        chartContext.changeVerticalFilling(id, { color });
+    }, [color]);
+
+    const isFirstMount = useFirstMountState();
+    useShallowCompareEffect(() => {
+        if (!isFirstMount) {
+            chartContext.changeVerticalFilling(id, { intervals });
+        }
+    }, [intervals]);
 
     return null;
 }
