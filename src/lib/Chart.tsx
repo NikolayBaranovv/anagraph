@@ -1,7 +1,6 @@
 import React, {
     createContext,
     CSSProperties,
-    ReactElement,
     ReactNode,
     useCallback,
     useContext,
@@ -68,7 +67,7 @@ interface ChartProps {
 
     children?: ReactNode | ReactNode[];
 
-    onCursorMove?: (x: number) => void;
+    onHover?: (x: number, event: PointerEvent) => void;
 }
 
 function arrayMergeOverwrite<T>(_: T[], sourceArray: T[]): T[] {
@@ -198,7 +197,7 @@ export function Chart(props: ChartProps) {
                     width: gridAreaLpx.width,
                     height: gridAreaLpx.height,
                 }}
-                onCursorMove={props.onCursorMove}
+                onHover={props.onHover}
             />
             <ChartContext.Provider value={chartContextValue}>{props.children}</ChartContext.Provider>
 

@@ -62,7 +62,7 @@ export function fitBoundsInLimit(bounds: Bounds, limit: Bounds | undefined): Bou
  * @param viewport  Отрезок на некоей шкале, соответствующий элементу element
  * @param onChange  Коллбэк, который будет вызываться в процессе манипуляций
  * @param onEnd     Коллбэк, который вызовется при завершении манипуляции
- * @param onCursorMove  Коллбэк, который вызовется при движении курсора без нажатия
+ * @param onHover   Коллбэк, который вызовется при движении курсора без нажатия
  * @param options   Дополнительные параметры
  */
 export function useDragAndZoom(
@@ -70,7 +70,7 @@ export function useDragAndZoom(
     viewport: Bounds,
     onChange: (viewport: Bounds) => void,
     onEnd: (viewport: Bounds) => void,
-    onCursorMove?: (x: number) => void,
+    onHover?: (x: number, event: PointerEvent) => void,
     options: DragAndZoomOptions = {},
 ): void {
     // FIXME: возможно можно избежать лишних rebind'ов если хранить viewport
@@ -183,8 +183,8 @@ export function useDragAndZoom(
                 info.currentX = calcXInTemporaryViewport(event.pageX, bounds);
                 updateTemporaryViewport();
             } else {
-                if (onCursorMove) {
-                    onCursorMove(calcXInTemporaryViewport(event.pageX, bounds));
+                if (onHover) {
+                    onHover(calcXInTemporaryViewport(event.pageX, bounds), event);
                 }
             }
         };
