@@ -1,11 +1,11 @@
 import { CSSProperties, useState } from "react";
 import { useDragAndZoom } from "./useDragAndZoom";
 import { useBoundsContext } from "./BoundsManager";
-import { Bounds } from "./basic-types";
 
 interface ManipulatorProps {
     style: CSSProperties;
     onHover?: (x: number, event: PointerEvent) => void;
+    onPointerOut?: () => void;
 }
 
 export function Manipulator(props: ManipulatorProps) {
@@ -20,13 +20,14 @@ export function Manipulator(props: ManipulatorProps) {
 
     return (
         <div
+            ref={setGlass}
             className="glass"
             style={{
                 position: "absolute",
                 touchAction: "none",
                 ...props.style,
             }}
-            ref={setGlass}
+            onPointerOut={props.onPointerOut}
         />
     );
 }

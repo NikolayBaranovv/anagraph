@@ -70,6 +70,7 @@ interface ChartProps {
     children?: ReactNode | ReactNode[];
 
     onHover?: (x: number, event: PointerEvent) => void;
+    onPointerOut?: () => void;
 }
 
 function arrayMergeOverwrite<T>(_: T[], sourceArray: T[]): T[] {
@@ -113,6 +114,8 @@ export interface ChartRef {
 }
 
 export const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
+    const { onHover, onPointerOut } = props;
+
     const worker = useWorker();
 
     const onCanvasResize = useCallback(
@@ -220,7 +223,8 @@ export const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
                     width: gridAreaLpx.width,
                     height: gridAreaLpx.height,
                 }}
-                onHover={props.onHover}
+                onHover={onHover}
+                onPointerOut={onPointerOut}
             />
             <ChartContext.Provider value={chartContextValue}>{props.children}</ChartContext.Provider>
 
