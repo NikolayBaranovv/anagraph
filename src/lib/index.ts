@@ -1,6 +1,7 @@
 export { WorkerCreatorProvider } from "./WorkerCreatorContext";
 export { startWorker } from "./worker";
 export { Chart } from "./Chart";
+export type { ChartRef } from "./Chart";
 export { Line } from "./Line";
 export type { Rect, Bounds, Size } from "./basic-types";
 export { BoundsManager } from "./BoundsManager";

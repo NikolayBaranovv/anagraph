@@ -108,7 +108,7 @@ function useCanvas(onResize: (sizeCpx: Size) => void) {
     return { canvas, setCanvas, canvasSizeCpx };
 }
 
-interface ChartRef {
+export interface ChartRef {
     xToPixelOffset(x: number): number | null;
 }
 
