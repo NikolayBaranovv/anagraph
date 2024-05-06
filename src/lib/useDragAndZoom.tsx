@@ -63,6 +63,7 @@ export function fitBoundsInLimit(bounds: Bounds, limit: Bounds | undefined): Bou
  * @param onChange  Коллбэк, который будет вызываться в процессе манипуляций
  * @param onEnd     Коллбэк, который вызовется при завершении манипуляции
  * @param onHover   Коллбэк, который вызовется при движении курсора без нажатия
+ * @param onHoverEnd Коллбэк, который вызовется при завершении движения курсора без нажатия
  * @param options   Дополнительные параметры
  */
 export function useDragAndZoom(
@@ -71,6 +72,7 @@ export function useDragAndZoom(
     onChange: (viewport: Bounds) => void,
     onEnd: (viewport: Bounds) => void,
     onHover?: (x: number, event: PointerEvent) => void,
+    onHoverEnd?: () => void,
     options: DragAndZoomOptions = {},
 ): void {
     // FIXME: возможно можно избежать лишних rebind'ов если хранить viewport
@@ -140,6 +142,9 @@ export function useDragAndZoom(
 
         const onPointerDown = (event: PointerEvent) => {
             if (event.pointerType != "mouse") return;
+            if (Object.keys(touchInfo).length === 0) {
+                onHoverEnd?.();
+            }
             temporaryViewport = viewport;
             const bounds = element.getBoundingClientRect();
             const x = calcXInTemporaryViewport(event.pageX, bounds);

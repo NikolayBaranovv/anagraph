@@ -5,16 +5,16 @@ import { useBoundsContext } from "./BoundsManager";
 interface ManipulatorProps {
     style: CSSProperties;
     onHover?: (x: number, event: PointerEvent) => void;
-    onPointerOut?: () => void;
+    onHoverEnd?: () => void;
 }
 
 export function Manipulator(props: ManipulatorProps) {
-    const { onHover } = props;
+    const { onHover, onHoverEnd } = props;
     const { xBoundsLimit, settledXBounds, onManipulation, onManipulationEnd } = useBoundsContext();
 
     const [glass, setGlass] = useState<HTMLDivElement | null>(null);
 
-    useDragAndZoom(glass, settledXBounds, onManipulation, onManipulationEnd, onHover, {
+    useDragAndZoom(glass, settledXBounds, onManipulation, onManipulationEnd, onHover, onHoverEnd, {
         boundsLimit: xBoundsLimit,
     });
 
@@ -27,7 +27,6 @@ export function Manipulator(props: ManipulatorProps) {
                 touchAction: "none",
                 ...props.style,
             }}
-            onPointerOut={props.onPointerOut}
         />
     );
 }

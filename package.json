@@ -1,6 +1,6 @@
 {
   "name": "anagraph",
-  "version": "0.3.19",
+  "version": "0.3.20",
   "homepage": "https://ilyaskriblovsky.github.io/anagraph",
   "main": "dist/anagraph.js",
   "module": "dist/anagraph.esm.js",
