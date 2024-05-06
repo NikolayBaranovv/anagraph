@@ -194,6 +194,10 @@ export function useDragAndZoom(
             }
         };
 
+        const onPointerOut = (event: PointerEvent) => {
+            onHoverEnd?.();
+        };
+
         const onWheel = (event: WheelEvent) => {
             event.preventDefault();
             event.stopPropagation();
@@ -219,6 +223,7 @@ export function useDragAndZoom(
         element.addEventListener("pointerdown", onPointerDown);
         element.addEventListener("pointerup", onPointerUp);
         element.addEventListener("pointermove", onPointerMove);
+        element.addEventListener("pointerout", onPointerOut);
 
         return () => {
             element.removeEventListener("touchstart", onTouchStart);
@@ -229,6 +234,7 @@ export function useDragAndZoom(
             element.removeEventListener("pointerdown", onPointerDown);
             element.removeEventListener("pointerup", onPointerUp);
             element.removeEventListener("pointermove", onPointerMove);
+            element.removeEventListener("pointerout", onPointerOut);
         };
     }, [element, onChange, onEnd, viewport[0], viewport[1], options.boundsLimit?.[0], options.boundsLimit?.[1]]);
 }
