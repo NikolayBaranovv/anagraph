@@ -1,10 +1,12 @@
 import React, {
     createContext,
     CSSProperties,
+    forwardRef,
     ReactNode,
     useCallback,
     useContext,
     useEffect,
+    useImperativeHandle,
     useMemo,
     useRef,
     useState,
@@ -18,7 +20,7 @@ import {
     setXBoundsAndRedrawMessage,
     WorkerToMainMessage,
 } from "./worker/messages";
-import { useDeepCompareEffect, useUnmount } from "react-use";
+import { useDeepCompareEffect, useLatest, useUnmount } from "react-use";
 import { useBoundsContext } from "./BoundsManager";
 import { Manipulator } from "./Manipulator";
 import { DeepPartial, noop } from "ts-essentials";
@@ -106,7 +108,11 @@ function useCanvas(onResize: (sizeCpx: Size) => void) {
     return { canvas, setCanvas, canvasSizeCpx };
 }
 
-export function Chart(props: ChartProps) {
+interface ChartRef {
+    xToPixelOffset(x: number): number | null;
+}
+
+export const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
     const worker = useWorker();
 
     const onCanvasResize = useCallback(
@@ -186,6 +192,23 @@ export function Chart(props: ChartProps) {
         () => calcManipulationAreaLpx(divSize(canvasSizeCpx, window.devicePixelRatio), effectiveSettings),
         [canvasSizeCpx, effectiveSettings],
     );
+    const latestGridAreaLpx = useLatest(gridAreaLpx);
+
+    useImperativeHandle(
+        ref,
+        (): ChartRef => ({
+            xToPixelOffset: (x: number) => {
+                const xBounds = getCurrentXBounds();
+                if (x < xBounds[0] || x > xBounds[1]) {
+                    return null;
+                }
+
+                const percent = (x - xBounds[0]) / (xBounds[1] - xBounds[0]);
+                return latestGridAreaLpx.current.x + percent * latestGridAreaLpx.current.width;
+            },
+        }),
+        [],
+    );
 
     return (
         <div className={props.className} style={{ position: "relative", height: "350px", ...props.style }}>
@@ -220,4 +243,4 @@ export function Chart(props: ChartProps) {
             ) : null}
         </div>
     );
-}
+});
