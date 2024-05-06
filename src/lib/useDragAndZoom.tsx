@@ -230,5 +230,5 @@ export function useDragAndZoom(
             element.removeEventListener("pointerup", onPointerUp);
             element.removeEventListener("pointermove", onPointerMove);
         };
-    }, [element, onChange, onEnd, viewport, options.boundsLimit]);
+    }, [element, onChange, onEnd, viewport[0], viewport[1], options.boundsLimit?.[0], options.boundsLimit?.[1]]);
 }
