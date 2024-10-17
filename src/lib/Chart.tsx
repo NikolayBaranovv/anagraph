@@ -71,6 +71,7 @@ interface ChartProps {
 
     onHover?: (x: number, event: PointerEvent) => void;
     onHoverEnd?: () => void;
+    onTouchUp?: (x: number, event: PointerEvent) => void;
 }
 
 function arrayMergeOverwrite<T>(_: T[], sourceArray: T[]): T[] {
@@ -119,7 +120,7 @@ export interface ChartRef {
 }
 
 export const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
-    const { onHover, onHoverEnd } = props;
+    const { onHover, onHoverEnd, onTouchUp } = props;
 
     const worker = useWorker();
 
@@ -230,6 +231,7 @@ export const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
                 }}
                 onHover={onHover}
                 onHoverEnd={onHoverEnd}
+                onTouchUp={onTouchUp}
             />
             <ChartContext.Provider value={chartContextValue}>{props.children}</ChartContext.Provider>
 

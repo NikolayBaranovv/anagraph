@@ -73,6 +73,7 @@ export function useDragAndZoom(
     onEnd: (viewport: Bounds) => void,
     onHover?: (x: number, event: PointerEvent) => void,
     onHoverEnd?: () => void,
+    onTouchUp?: (x: number, event: PointerEvent) => void,
     options: DragAndZoomOptions = {},
 ): void {
     // FIXME: возможно можно избежать лишних rebind'ов если хранить viewport
@@ -84,6 +85,8 @@ export function useDragAndZoom(
 
         const touchInfo: SafeDictionary<TouchDetails, number | string> = {};
         let temporaryViewport: Bounds = viewport;
+
+        let startX, startY;
 
         function calcXInTemporaryViewport(pageX: number, bounds: DOMRect): number {
             return (
@@ -126,7 +129,9 @@ export function useDragAndZoom(
         };
 
         const onTouchStart = (event: TouchEvent) => {
-            event.preventDefault();
+            startX = event.touches[0].clientX;
+            startY = event.touches[0].clientY;
+
             if (Object.keys(touchInfo).length == 0) {
                 temporaryViewport = viewport;
             }
@@ -161,7 +166,14 @@ export function useDragAndZoom(
         };
 
         const onPointerUp = (event: PointerEvent) => {
-            if (event.pointerType != "mouse") return;
+            if (event.pointerType != "mouse") {
+                const bounds = element.getBoundingClientRect();
+                if (onTouchUp) {
+                    onTouchUp(calcXInTemporaryViewport(event.pageX, bounds), event);
+                }
+                return
+            }
+
             delete touchInfo[event.pointerId];
             if (Object.keys(touchInfo).length == 0) {
                 onEnd(temporaryViewport);
@@ -170,6 +182,14 @@ export function useDragAndZoom(
         };
 
         const onTouchMove = (event: TouchEvent) => {
+            const moveX = event.touches[0].clientX;
+            const moveY = event.touches[0].clientY;
+
+            const diffX = moveX - startX;
+            const diffY = moveY - startY;
+
+            if (Math.abs(diffX) < Math.abs(diffY) && event.changedTouches.length === 1) return;
+
             const bounds = element.getBoundingClientRect();
             iterateTouchList(event.changedTouches, (touch) => {
                 const info = touchInfo[touch.identifier];
