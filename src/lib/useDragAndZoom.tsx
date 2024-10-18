@@ -86,7 +86,7 @@ export function useDragAndZoom(
         const touchInfo: SafeDictionary<TouchDetails, number | string> = {};
         let temporaryViewport: Bounds = viewport;
 
-        let startX, startY;
+        let startX: number, startY: number;
 
         function calcXInTemporaryViewport(pageX: number, bounds: DOMRect): number {
             return (
@@ -168,9 +168,7 @@ export function useDragAndZoom(
         const onPointerUp = (event: PointerEvent) => {
             if (event.pointerType != "mouse") {
                 const bounds = element.getBoundingClientRect();
-                if (onTouchUp) {
-                    onTouchUp(calcXInTemporaryViewport(event.pageX, bounds), event);
-                }
+                onTouchUp?.(calcXInTemporaryViewport(event.pageX, bounds), event);
                 return
             }
 
@@ -188,7 +186,8 @@ export function useDragAndZoom(
             const diffX = moveX - startX;
             const diffY = moveY - startY;
 
-            if (Math.abs(diffX) < Math.abs(diffY) && event.changedTouches.length === 1) return;
+            if (Math.abs(diffX) < Math.abs(diffY) && event.touches.length === 1) return
+            event.preventDefault()
 
             const bounds = element.getBoundingClientRect();
             iterateTouchList(event.changedTouches, (touch) => {
