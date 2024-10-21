@@ -6,15 +6,16 @@ interface ManipulatorProps {
     style: CSSProperties;
     onHover?: (x: number, event: PointerEvent) => void;
     onHoverEnd?: () => void;
+    onTouchUp?: (x: number, event: PointerEvent) => void;
 }
 
 export function Manipulator(props: ManipulatorProps) {
-    const { onHover, onHoverEnd } = props;
+    const { onHover, onHoverEnd, onTouchUp } = props;
     const { xBoundsLimit, settledXBounds, onManipulation, onManipulationEnd } = useBoundsContext();
 
     const [glass, setGlass] = useState<HTMLDivElement | null>(null);
 
-    useDragAndZoom(glass, settledXBounds, onManipulation, onManipulationEnd, onHover, onHoverEnd, {
+    useDragAndZoom(glass, settledXBounds, onManipulation, onManipulationEnd, onHover, onHoverEnd, onTouchUp, {
         boundsLimit: xBoundsLimit,
     });
 
@@ -24,7 +25,7 @@ export function Manipulator(props: ManipulatorProps) {
             className="glass"
             style={{
                 position: "absolute",
-                touchAction: "none",
+                touchAction: "pan-x pan-y",
                 ...props.style,
             }}
         />

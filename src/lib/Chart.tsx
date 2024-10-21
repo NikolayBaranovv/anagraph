@@ -71,6 +71,7 @@ interface ChartProps {
 
     onHover?: (x: number, event: PointerEvent) => void;
     onHoverEnd?: () => void;
+    onTouchUp?: (x: number, event: PointerEvent) => void;
 }
 
 function arrayMergeOverwrite<T>(_: T[], sourceArray: T[]): T[] {
@@ -92,7 +93,10 @@ function useCanvas(onResize: (sizeCpx: Size) => void) {
     const onCanvasResize = useCallback(
         function onCanvasResize(entries: ResizeObserverEntry[]) {
             if (canvas == null) return;
-            const { inlineSize: width, blockSize: height } = entries[0].devicePixelContentBoxSize[0];
+
+            const dpr = window.devicePixelRatio;
+            const width = entries[0].contentBoxSize[0].inlineSize * dpr;
+            const height = entries[0].contentBoxSize[0].blockSize * dpr;
             setCanvasSizeCpx({ width, height });
             onResize({ width, height });
         },
@@ -114,7 +118,7 @@ export interface ChartRef {
 }
 
 export const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
-    const { onHover, onHoverEnd } = props;
+    const { onHover, onHoverEnd, onTouchUp } = props;
 
     const worker = useWorker();
 
@@ -225,6 +229,7 @@ export const Chart = forwardRef<ChartRef, ChartProps>((props, ref) => {
                 }}
                 onHover={onHover}
                 onHoverEnd={onHoverEnd}
+                onTouchUp={onTouchUp}
             />
             <ChartContext.Provider value={chartContextValue}>{props.children}</ChartContext.Provider>
 
