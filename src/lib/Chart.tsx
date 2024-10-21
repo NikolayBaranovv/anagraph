@@ -93,12 +93,10 @@ function useCanvas(onResize: (sizeCpx: Size) => void) {
     const onCanvasResize = useCallback(
         function onCanvasResize(entries: ResizeObserverEntry[]) {
             if (canvas == null) return;
-            const width =
-                entries[0]?.devicePixelContentBoxSize?.[0].inlineSize ??
-                entries[0].contentBoxSize[0].inlineSize * 2;
-            const height =
-                entries[0]?.devicePixelContentBoxSize?.[0].blockSize ??
-                entries[0].contentBoxSize[0].blockSize * 2;
+
+            const dpr = window.devicePixelRatio;
+            const width = entries[0].contentBoxSize[0].inlineSize * dpr;
+            const height = entries[0].contentBoxSize[0].blockSize * dpr;
             setCanvasSizeCpx({ width, height });
             onResize({ width, height });
         },
